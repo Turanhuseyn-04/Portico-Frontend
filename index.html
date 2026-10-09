@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Portico — a shorter list of stays</title>
+  <meta name="description" content="Portico is a concentrated stay list. Search by city, dates, and guests, then see a total made of nights times the nightly rate.">
+  <meta name="theme-color" content="#142033">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='9' fill='%23142033'/%3E%3Cpath fill='none' stroke='%23f4efe6' stroke-width='1.6' stroke-linecap='round' d='M3 34c7.2.2 11.2-6.2 14.2-11.4'/%3E%3Ccircle cx='3.2' cy='34' r='1.55' fill='%23f4efe6'/%3E%3Cg transform='translate(13 1.5) scale(1.12)' fill='%23f4efe6'%3E%3Cpath d='M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z'/%3E%3C/g%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/home.css?v=12">
+  <script>document.documentElement.classList.add("js");</script>
+</head>
+<body>
+  <a class="skip" href="#list">Skip to the list</a>
+
+  <header class="header" id="header">
+    <div class="header-inner">
+      <a class="logo" href="#hero" aria-label="Portico, home">
+        <svg class="logo-mark" viewBox="0 0 40 40" width="36" height="36" aria-hidden="true">
+          <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M3 34c7.2.2 11.2-6.2 14.2-11.4"/>
+          <circle cx="3.2" cy="34" r="1.55" fill="currentColor"/>
+          <g transform="translate(13 1.5) scale(1.12)" fill="currentColor">
+            <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>
+          </g>
+        </svg>
+        Portico
+      </a>
+      <nav class="nav" id="nav">
+        <a href="#hero">Stays</a>
+        <a href="#list">Houses</a>
+        <a href="#notes">Stories</a>
+        <button class="btn-line" type="button" data-auth="register">Register</button>
+        <button class="btn-line btn-fill" type="button" data-auth="signin">Sign in</button>
+      </nav>
+      <button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="hero">
+      <div class="wrap">
+        <div class="hero-copy">
+          <p class="kicker"><span>Stays, without the noise</span></p>
+          <h1>Fewer choices,<br>Better stays.</h1>
+          <p class="lede">Discover exceptional places to stay, carefully selected for your next getaway.</p>
+        </div>
+
+        <form class="search" id="searchForm" aria-describedby="formError">
+          <div class="search-fields">
+            <div class="field" id="whereField">
+              <label class="field-label" for="whereInput">Destination</label>
+              <input id="whereInput" name="destination" type="text" placeholder="Where are you going?" autocomplete="off" aria-autocomplete="list" aria-controls="wherePopover" aria-expanded="false">
+            </div>
+            <div class="dates" id="datesField">
+              <div class="field">
+                <span class="field-label" id="checkInLabel">Check-in</span>
+                <button class="field-value is-empty" id="checkInBtn" type="button" aria-labelledby="checkInLabel" aria-controls="calPopover" aria-expanded="false">Add date</button>
+              </div>
+              <div class="field">
+                <span class="field-label" id="checkOutLabel">Check-out</span>
+                <button class="field-value is-empty" id="checkOutBtn" type="button" aria-labelledby="checkOutLabel" aria-controls="calPopover" aria-expanded="false">Add date</button>
+              </div>
+            </div>
+            <div class="field" id="guestField">
+              <span class="field-label" id="guestLabel">Guests</span>
+              <button class="field-value" id="guestBtn" type="button" aria-labelledby="guestLabel" aria-controls="guestPopover" aria-expanded="false">2 adults · 1 room</button>
+            </div>
+          </div>
+          <button class="search-btn" type="submit">
+            Search
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+          <div class="popover" id="wherePopover" hidden></div>
+          <div class="popover" id="calPopover" hidden></div>
+          <div class="popover guest-popover" id="guestPopover" hidden>
+            <div class="guest-box">
+              <div class="guest-row">
+                <div>
+                  <strong>Adults</strong>
+                  <em>Ages 18 and over</em>
+                </div>
+                <div class="stepper">
+                  <button type="button" data-step="adults" data-dir="-1" aria-label="Remove an adult">−</button>
+                  <span id="adultsCount">2</span>
+                  <button type="button" data-step="adults" data-dir="1" aria-label="Add an adult">+</button>
+                </div>
+              </div>
+              <div class="guest-row">
+                <div>
+                  <strong>Children</strong>
+                  <em>Ages 0–17</em>
+                </div>
+                <div class="stepper">
+                  <button type="button" data-step="children" data-dir="-1" aria-label="Remove a child">−</button>
+                  <span id="childrenCount">0</span>
+                  <button type="button" data-step="children" data-dir="1" aria-label="Add a child">+</button>
+                </div>
+              </div>
+              <div class="guest-row">
+                <div>
+                  <strong>Rooms</strong>
+                  <em>Physical rooms</em>
+                </div>
+                <div class="stepper">
+                  <button type="button" data-step="rooms" data-dir="-1" aria-label="Remove a room">−</button>
+                  <span id="roomsCount">1</span>
+                  <button type="button" data-step="rooms" data-dir="1" aria-label="Add a room">+</button>
+                </div>
+              </div>
+              <p class="guest-note">The stay total is nightly rate × nights × rooms.</p>
+              <button class="guest-done" type="button" data-close-guests>Done</button>
+            </div>
+          </div>
+        </form>
+        <p class="form-error" id="formError" role="alert"></p>
+        <p class="fine">Stay total = nights × nightly rate × rooms.</p>
+        <div class="chips" id="chips">
+          <button class="chip" type="button" data-city="Lisbon">Lisbon</button>
+          <button class="chip" type="button" data-city="Kyoto">Kyoto</button>
+          <button class="chip" type="button" data-city="Copenhagen">Copenhagen</button>
+          <button class="chip" type="button" data-city="Marrakech">Marrakech</button>
+          <button class="chip" type="button" data-city="Amalfi">Amalfi</button>
+          <button class="chip" type="button" data-city="Oaxaca">Oaxaca</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="trending" aria-labelledby="trendTitle">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div>
+            <p class="kicker">Trending</p>
+            <h2 id="trendTitle">Top trending destinations.</h2>
+          </div>
+          <div class="arrows">
+            <button type="button" id="trendPrev" aria-label="Previous destinations">←</button>
+            <button type="button" id="trendNext" aria-label="Next destinations">→</button>
+          </div>
+        </div>
+        <div class="trend-viewport">
+          <div class="trend-track reveal-track" id="trendTrack" tabindex="0" aria-label="Top trending destinations"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="properties" aria-labelledby="propertyTitle">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div>
+            <p class="kicker">Property type</p>
+            <h2 id="propertyTitle">Find Your Place in the World.</h2>
+            <p class="sub">Discover exceptional stays, from boutique hotels to private villas.</p>
+            <p class="property-kinds">Hotels · Apartments · Resorts · Villas</p>
+          </div>
+        </div>
+        <div class="properties" id="propertiesGrid">
+          <button class="property-card reveal" type="button" data-property="Hotel" aria-pressed="false">
+            <img src="assets/hotel.jpg" alt="">
+            <strong>Hotels</strong>
+          </button>
+          <button class="property-card reveal" type="button" data-property="Apartment" aria-pressed="false">
+            <img src="assets/apartment.jpg" alt="">
+            <strong>Apartments</strong>
+          </button>
+          <button class="property-card reveal" type="button" data-property="Resort" aria-pressed="false">
+            <img src="assets/resort.jpg" alt="">
+            <strong>Resorts</strong>
+          </button>
+          <button class="property-card reveal" type="button" data-property="Villa" aria-pressed="false">
+            <img src="assets/villa.jpg" alt="">
+            <strong>Villas</strong>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="offer-band" id="rules" aria-labelledby="rulesTitle">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div>
+            <p class="kicker">How the price works</p>
+            <h2 id="rulesTitle">Three rules, said out loud.</h2>
+          </div>
+        </div>
+        <div class="offers">
+          <article class="offer reveal">
+            <span>01</span>
+            <h3>The total is nights times rate.</h3>
+            <p>Search with dates and a card switches from a nightly rate to the stay total. The sum is on the card before you continue.</p>
+          </article>
+          <article class="offer reveal">
+            <span>02</span>
+            <h3>Cancellation is a date.</h3>
+            <p>Free cancellation runs until three days before check-in, and only on houses that offer it. Others say non-refundable.</p>
+          </article>
+          <article class="offer reveal">
+            <span>03</span>
+            <h3>If it cannot sleep you, it says so.</h3>
+            <p>A house stays on the list when the group is too large. It does not pretend the room still fits.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="list" aria-labelledby="listTitle">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div>
+            <p class="kicker">The list</p>
+            <h2 id="listTitle">Houses you can actually count.</h2>
+            <p class="sub" id="listMeta" aria-live="polite"></p>
+          </div>
+          <label class="sort">Sort
+            <select id="sort">
+              <option value="featured">Featured</option>
+              <option value="price">Price</option>
+              <option value="rating">Guest rating</option>
+            </select>
+          </label>
+        </div>
+        <div id="stayList"></div>
+      </div>
+    </section>
+
+    <section class="section types-section" aria-labelledby="typeTitle">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div>
+            <p class="kicker">Browse</p>
+            <h2 id="typeTitle">Four kinds of door.</h2>
+            <p class="sub">Choose a kind of stay. Choose it again to clear.</p>
+          </div>
+        </div>
+        <div class="types" id="types">
+          <button class="type-card reveal" type="button" data-type="House">
+            <img src="assets/marrakech.jpg" alt="">
+            <span>Whole place</span>
+            <strong>House</strong>
+          </button>
+          <button class="type-card reveal" type="button" data-type="Suite">
+            <img src="assets/amalfi.jpg" alt="">
+            <span>A larger room</span>
+            <strong>Suite</strong>
+          </button>
+          <button class="type-card reveal" type="button" data-type="Studio">
+            <img src="assets/copenhagen.jpg" alt="">
+            <span>Somewhere to work</span>
+            <strong>Studio</strong>
+          </button>
+          <button class="type-card reveal" type="button" data-type="Room">
+            <img src="assets/kyoto.jpg" alt="">
+            <span>Just the night</span>
+            <strong>Room</strong>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="notes" aria-labelledby="notesTitle">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div>
+            <p class="kicker">After checkout</p>
+            <h2 id="notesTitle">What guests mention.</h2>
+          </div>
+        </div>
+        <div class="notes">
+          <figure class="note reveal">
+            <blockquote>“The photo was the room. That is rarer than the big sites admit.”</blockquote>
+            <figcaption>
+              <span class="score">9.6</span>
+              <span><strong>Ivo P.</strong> The Marble Court</span>
+            </figcaption>
+          </figure>
+          <figure class="note reveal">
+            <blockquote>“We changed the dates and the price changed in front of us.”</blockquote>
+            <figcaption>
+              <span class="score">9.2</span>
+              <span><strong>Lena S.</strong> Greenhouse No. 4</span>
+            </figcaption>
+          </figure>
+          <figure class="note reveal">
+            <blockquote>“Cancelled on the Tuesday. The rule was written down, and they kept it.”</blockquote>
+            <figcaption>
+              <span class="score">9.4</span>
+              <span><strong>Samir A.</strong> Riad of Small Doors</span>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="close-band" aria-labelledby="closeTitle">
+      <div class="wrap reveal">
+        <p class="kicker">Before you open another tab</p>
+        <h2 id="closeTitle">If it is not on this list, we are not selling it.</h2>
+        <a class="btn-copper" href="#hero">Search the list</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-grid">
+      <div class="reveal">
+        <a class="logo" href="#hero">
+          <svg class="logo-mark" viewBox="0 0 40 40" width="32" height="32" aria-hidden="true">
+            <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M3 34c7.2.2 11.2-6.2 14.2-11.4"/>
+            <circle cx="3.2" cy="34" r="1.55" fill="currentColor"/>
+            <g transform="translate(13 1.5) scale(1.12)" fill="currentColor">
+              <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>
+            </g>
+          </svg>
+          Portico
+        </a>
+        <p>A concentrated stay list. Search, price, and book one house at a time.</p>
+      </div>
+      <div class="reveal">
+        <h2>Visit</h2>
+        <a href="#hero">Search</a>
+        <a href="#list">Houses</a>
+        <a href="#notes">Stories</a>
+      </div>
+      <div class="reveal">
+        <h2>Account</h2>
+        <button type="button" data-auth="signin">Sign in</button>
+        <button type="button" data-auth="register">Register</button>
+      </div>
+      <div class="reveal">
+        <h2>This page</h2>
+        <p>A design of the home screen. Accounts, holds, and live availability connect when the API is in place.</p>
+      </div>
+    </div>
+    <div class="wrap legal">
+      <p>© 2026 Portico. Photographs from Unsplash, used for this design study.</p>
+    </div>
+  </footer>
+
+  <div class="drawer" id="drawer" hidden>
+    <button class="backdrop" type="button" data-close="drawer" aria-label="Close details"></button>
+    <aside class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+      <button class="icon-x" type="button" data-close="drawer" aria-label="Close">×</button>
+      <div id="drawerBody"></div>
+    </aside>
+  </div>
+
+  <div class="modal" id="authModal" hidden>
+    <button class="backdrop" type="button" data-close="modal" aria-label="Close dialog"></button>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+      <button class="icon-x" type="button" data-close="modal" aria-label="Close">×</button>
+      <h2 id="authTitle">Sign in</h2>
+      <p class="auth-lede" id="authLede">Use the same door you will use when the API is connected.</p>
+      <form id="authForm">
+        <label class="stack" id="authNameWrap" hidden>Full name
+          <input id="authName" name="name" type="text" autocomplete="name">
+        </label>
+        <label class="stack">Email
+          <input name="email" type="email" required autocomplete="email">
+        </label>
+        <label class="stack">Password
+          <input name="password" type="password" required minlength="8" autocomplete="current-password">
+        </label>
+        <button class="search-btn auth-submit" id="authSubmit" type="submit">Sign in</button>
+        <button class="text-btn" id="authSwitch" type="button">New here? Create an account</button>
+      </form>
+      <p id="authDone" hidden></p>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script src="js/home.js?v=13" defer></script>
+</body>
+</html>
