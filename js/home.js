@@ -167,7 +167,6 @@ const state = {
   active: null,
   saved: new Set(),
   query: null,
-  type: "",
   property: ""
 };
 
@@ -364,7 +363,6 @@ function filteredStays() {
   const destination = state.query ? state.query.destination : "";
   const list = stays.filter((stay) => {
     if (state.property && stay.property !== state.property) return false;
-    if (state.type && stay.type !== state.type) return false;
     if (destination && !matchesDest(stay, destination)) return false;
     return true;
   });
@@ -380,13 +378,12 @@ function renderList() {
   const unfit = state.query ? list.filter((stay) => !fits(stay)).length : 0;
   let text = `${list.length} of ${stays.length} houses`;
   if (state.property) text += ` · ${propertyLabel(state.property)}`;
-  if (state.type) text += ` · ${state.type}`;
   if (state.query && state.query.destination) text += ` · ${state.query.destination}`;
   if (state.query) {
     const nights = nightCount(state.query.checkIn, state.query.checkOut);
     text += ` · ${formatPretty(state.query.checkIn)} – ${formatPretty(state.query.checkOut)} · ${nights} night${nights === 1 ? "" : "s"}`;
     text += ` · ${guestLabelFrom(state.query)}`;
-  } else if (!state.type && !state.property) {
+  } else if (!state.property) {
     text = `${stays.length} houses. Add dates to turn the nightly rate into a stay total.`;
   } else {
     text += ". Add dates to price the stay.";
@@ -398,7 +395,7 @@ function renderList() {
     const place = state.query && state.query.destination ? ` in ${escapeHtml(state.query.destination)}` : "";
     stayList.innerHTML = `<div class="empty">
       <h3>Nothing on the list${place}.</h3>
-      <p>Portico keeps eight houses. Clear the city, the property type, or the kind of door.</p>
+      <p>Portico keeps eight houses. Clear the city or the property type.</p>
       <button class="btn-ink" type="button" data-reset>Clear the filter</button>
     </div>`;
     return;
@@ -643,12 +640,11 @@ function runSearch() {
 
 function resetFilters() {
   state.destination = "";
-  state.type = "";
   state.property = "";
   whereInput.value = "";
-  document.querySelectorAll(".type-card, .property-card").forEach((card) => {
+  document.querySelectorAll(".property-card").forEach((card) => {
     card.classList.remove("is-on");
-    if (card.classList.contains("property-card")) card.setAttribute("aria-pressed", "false");
+    card.setAttribute("aria-pressed", "false");
   });
   if (state.checkIn && state.checkOut) runSearch();
   else {
@@ -996,17 +992,6 @@ $("propertiesGrid").addEventListener("click", (event) => {
   $("list").scrollIntoView({ behavior: "smooth", block: "start" });
 });
 
-$("types").addEventListener("click", (event) => {
-  const card = event.target.closest(".type-card");
-  if (!card) return;
-  state.type = state.type === card.dataset.type ? "" : card.dataset.type;
-  document.querySelectorAll(".type-card").forEach((item) => {
-    item.classList.toggle("is-on", item.dataset.type === state.type);
-  });
-  renderList();
-  $("list").scrollIntoView({ behavior: "smooth", block: "start" });
-});
-
 drawer.addEventListener("click", (event) => {
   if (event.target.closest("[data-close='drawer']")) {
     closeDrawer();
@@ -1022,6 +1007,58 @@ header.addEventListener("click", (event) => {
   const auth = event.target.closest("[data-auth]");
   if (auth) openAuth(auth.dataset.auth);
   if (event.target.closest("a")) closeMenu();
+});
+
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+let glideFrame = 0;
+
+function easeInOutCubic(t) {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
+function markArrival(target) {
+  if (reduceMotion.matches) return;
+  target.classList.remove("is-arrived");
+  void target.offsetWidth;
+  target.classList.add("is-arrived");
+  window.setTimeout(() => target.classList.remove("is-arrived"), 1400);
+}
+
+function glideTo(target) {
+  const margin = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+  const start = window.scrollY;
+  const end = Math.max(0, target.getBoundingClientRect().top + start - margin);
+  const distance = end - start;
+  cancelAnimationFrame(glideFrame);
+  if (reduceMotion.matches || Math.abs(distance) < 2) {
+    window.scrollTo({ top: end, behavior: "instant" });
+    markArrival(target);
+    return;
+  }
+  const duration = Math.min(1200, Math.max(600, Math.abs(distance) * 0.45));
+  const began = performance.now();
+  const step = (now) => {
+    const t = Math.min(1, (now - began) / duration);
+    window.scrollTo({ top: start + distance * easeInOutCubic(t), behavior: "instant" });
+    if (t < 1) glideFrame = requestAnimationFrame(step);
+    else markArrival(target);
+  };
+  glideFrame = requestAnimationFrame(step);
+}
+
+document.addEventListener("click", (event) => {
+  const link = event.target.closest('a[href^="#"]');
+  if (!link || event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey) return;
+  const id = link.getAttribute("href").slice(1);
+  const target = id && document.getElementById(id);
+  if (!target) return;
+  event.preventDefault();
+  history.pushState(null, "", `#${id}`);
+  glideTo(target);
+});
+
+["wheel", "touchstart", "keydown"].forEach((type) => {
+  window.addEventListener(type, () => cancelAnimationFrame(glideFrame), { passive: true });
 });
 
 document.querySelector(".footer").addEventListener("click", (event) => {
@@ -1072,7 +1109,38 @@ document.addEventListener("keydown", (event) => {
 });
 
 const hero = $("hero");
-const driftTargets = () => document.querySelectorAll(".trend-card img, .stay-media img, .type-card img, .property-card img");
+const driftTargets = () => document.querySelectorAll(".trend-card img, .stay-media img, .video-band video, .property-card img");
+
+const videoTrack = $("videoTrack");
+const videoDots = [...$("videoDots").children];
+const bandVideos = [...videoTrack.querySelectorAll("video")];
+let videoIndex = 0;
+let bandVisible = false;
+
+function syncBandVideo() {
+  bandVideos.forEach((video, index) => {
+    if (bandVisible && index === videoIndex) video.play().catch(() => {});
+    else video.pause();
+  });
+}
+
+function showVideo(index) {
+  videoIndex = index;
+  videoTrack.style.transform = `translateX(-${index * 100}%)`;
+  videoDots.forEach((dot, i) => {
+    dot.classList.toggle("is-on", i === index);
+    if (i === index) dot.setAttribute("aria-current", "true");
+    else dot.removeAttribute("aria-current");
+  });
+  syncBandVideo();
+}
+
+videoDots.forEach((dot, index) => dot.addEventListener("click", () => showVideo(index)));
+
+new IntersectionObserver((entries) => {
+  bandVisible = entries.some((entry) => entry.isIntersecting);
+  syncBandVideo();
+}, { threshold: 0.1 }).observe(videoTrack.parentElement);
 let motionFrame = 0;
 
 function markVisible() {

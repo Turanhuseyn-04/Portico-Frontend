@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/home.css?v=12">
+  <link rel="stylesheet" href="css/home.css?v=18">
   <script>document.documentElement.classList.add("js");</script>
 </head>
 <body>
@@ -30,7 +30,7 @@
       </a>
       <nav class="nav" id="nav">
         <a href="#hero">Stays</a>
-        <a href="#list">Houses</a>
+        <a href="#propertiesGrid">Properties</a>
         <a href="#notes">Stories</a>
         <button class="btn-line" type="button" data-auth="register">Register</button>
         <button class="btn-line btn-fill" type="button" data-auth="signin">Sign in</button>
@@ -230,37 +230,16 @@
       </div>
     </section>
 
-    <section class="section types-section" aria-labelledby="typeTitle">
-      <div class="wrap">
-        <div class="section-head reveal">
-          <div>
-            <p class="kicker">Browse</p>
-            <h2 id="typeTitle">Four kinds of door.</h2>
-            <p class="sub">Choose a kind of stay. Choose it again to clear.</p>
-          </div>
+    <section class="video-slider" id="videoSlider" aria-label="Featured stays">
+      <div class="video-band">
+        <div class="video-track" id="videoTrack">
+          <div class="video-slide"><video src="assets/videos/villas/14041585_1920_1080_25fps.mp4" muted loop playsinline preload="auto" disablepictureinpicture aria-hidden="true"></video></div>
+          <div class="video-slide"><video src="assets/videos/resorts/3576398-uhd_3840_2160_25fps.mp4" muted loop playsinline preload="metadata" disablepictureinpicture aria-hidden="true"></video></div>
         </div>
-        <div class="types" id="types">
-          <button class="type-card reveal" type="button" data-type="House">
-            <img src="assets/marrakech.jpg" alt="">
-            <span>Whole place</span>
-            <strong>House</strong>
-          </button>
-          <button class="type-card reveal" type="button" data-type="Suite">
-            <img src="assets/amalfi.jpg" alt="">
-            <span>A larger room</span>
-            <strong>Suite</strong>
-          </button>
-          <button class="type-card reveal" type="button" data-type="Studio">
-            <img src="assets/copenhagen.jpg" alt="">
-            <span>Somewhere to work</span>
-            <strong>Studio</strong>
-          </button>
-          <button class="type-card reveal" type="button" data-type="Room">
-            <img src="assets/kyoto.jpg" alt="">
-            <span>Just the night</span>
-            <strong>Room</strong>
-          </button>
-        </div>
+      </div>
+      <div class="video-dots" id="videoDots">
+        <button type="button" class="is-on" aria-label="Video 1" aria-current="true"></button>
+        <button type="button" aria-label="Video 2"></button>
       </div>
     </section>
 
@@ -375,6 +354,6 @@
   </div>
 
   <div class="toast" id="toast" role="status"></div>
-  <script src="js/home.js?v=13" defer></script>
+  <script src="js/home.js?v=18" defer></script>
 </body>
 </html>
