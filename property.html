@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stay details — Portico</title>
+  <meta name="description" content="Photos, rooms, prices, reviews and location for a stay on Portico. The total is nights times the nightly rate.">
+  <meta name="theme-color" content="#142033">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='9' fill='%23142033'/%3E%3Cpath fill='none' stroke='%23f4efe6' stroke-width='1.6' stroke-linecap='round' d='M3 34c7.2.2 11.2-6.2 14.2-11.4'/%3E%3Ccircle cx='3.2' cy='34' r='1.55' fill='%23f4efe6'/%3E%3Cg transform='translate(13 1.5) scale(1.12)' fill='%23f4efe6'%3E%3Cpath d='M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z'/%3E%3C/g%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/home.css?v=20">
+  <link rel="stylesheet" href="css/property.css?v=3">
+  <script>document.documentElement.classList.add("js");</script>
+</head>
+<body class="property-page">
+  <a class="skip" href="#rooms">Skip to rooms</a>
+
+  <header class="header is-solid" id="header">
+    <div class="header-inner">
+      <a class="logo" href="index.html" aria-label="Portico, home">
+        <svg class="logo-mark" viewBox="0 0 40 40" width="36" height="36" aria-hidden="true">
+          <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M3 34c7.2.2 11.2-6.2 14.2-11.4"/>
+          <circle cx="3.2" cy="34" r="1.55" fill="currentColor"/>
+          <g transform="translate(13 1.5) scale(1.12)" fill="currentColor">
+            <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>
+          </g>
+        </svg>
+        Portico
+      </a>
+      <nav class="nav" id="nav">
+        <a href="index.html#hero">Stays</a>
+        <a href="index.html#propertiesGrid">Properties</a>
+        <a href="index.html#notes">Stories</a>
+        <button class="btn-line" type="button" data-auth="register">Register</button>
+        <button class="btn-line btn-fill" type="button" data-auth="signin">Sign in</button>
+      </nav>
+      <button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="wrap">
+      <nav class="crumbs" id="crumbs" aria-label="Breadcrumb">
+        <a href="index.html">Stays</a>
+      </nav>
+    </div>
+
+    <section class="wrap page-state" id="pageState" hidden aria-live="polite"></section>
+
+    <article class="property is-loading" id="property" aria-busy="true">
+      <header class="wrap p-head" id="overview">
+        <div class="p-title">
+          <p class="p-type" id="pType"><span class="skel" style="width: 160px"></span></p>
+          <h1 id="pName"><span class="skel skel-title"></span></h1>
+          <p class="p-address" id="pAddress"><span class="skel" style="width: 280px"></span></p>
+        </div>
+        <div class="p-side">
+          <a class="p-score" id="pScore" href="#reviews" hidden></a>
+          <div class="p-actions">
+            <button class="icon-btn" id="saveBtn" type="button" aria-pressed="false" aria-label="Save this stay">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 20s-7-4.4-7-9a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 4.6-7 9-7 9z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+            </button>
+            <button class="icon-btn" id="shareBtn" type="button" aria-label="Share this stay">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 15V4M8 8l4-4 4 4M5 13v6h14v-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <a class="btn-copper p-reserve" href="#rooms">See rooms</a>
+          </div>
+        </div>
+      </header>
+
+      <section class="wrap gallery" id="gallery" aria-label="Photos">
+        <div class="gallery-grid">
+          <span class="skel g-tile g-main"></span>
+          <span class="skel g-tile"></span>
+          <span class="skel g-tile"></span>
+          <span class="skel g-tile"></span>
+          <span class="skel g-tile"></span>
+        </div>
+      </section>
+
+      <nav class="subnav" id="subnav" aria-label="On this page">
+        <div class="wrap subnav-inner">
+          <a href="#about">Overview</a>
+          <a href="#amenities">Facilities</a>
+          <a href="#rooms">Rooms &amp; prices</a>
+          <a href="#reviews">Reviews</a>
+          <a href="#location">Location</a>
+          <a href="#rules">House rules</a>
+        </div>
+      </nav>
+
+      <div class="wrap p-layout">
+        <aside class="p-aside" aria-label="Your stay">
+          <div class="book-card" id="bookCard">
+            <div class="book-price" id="bookPrice"><span class="skel" style="width: 140px"></span></div>
+            <div class="book-fields">
+              <div class="book-dates" id="datesField">
+                <button class="book-field" id="checkInBtn" type="button" aria-controls="calPopover" aria-expanded="false">
+                  <span class="field-label">Check-in</span>
+                  <span class="book-value is-empty" id="checkInValue">Add date</span>
+                </button>
+                <button class="book-field" id="checkOutBtn" type="button" aria-controls="calPopover" aria-expanded="false">
+                  <span class="field-label">Check-out</span>
+                  <span class="book-value is-empty" id="checkOutValue">Add date</span>
+                </button>
+              </div>
+              <button class="book-field" id="guestBtn" type="button" aria-controls="guestPopover" aria-expanded="false">
+                <span class="field-label">Guests</span>
+                <span class="book-value" id="guestValue">2 adults · 1 room</span>
+              </button>
+            </div>
+            <p class="book-error" id="bookError" role="alert"></p>
+            <div class="book-room" id="bookRoom"></div>
+            <div class="book-bill" id="bookBill" aria-live="polite"></div>
+            <button class="search-btn book-cta" id="reserveBtn" type="button" aria-describedby="bookError">Reserve</button>
+            <p class="book-note" id="bookNote">You will not be charged yet.</p>
+
+            <div class="popover" id="calPopover" hidden></div>
+            <div class="popover guest-popover" id="guestPopover" hidden>
+              <div class="guest-box">
+                <div class="guest-row">
+                  <div>
+                    <strong>Adults</strong>
+                    <em>Ages 18 and over</em>
+                  </div>
+                  <div class="stepper">
+                    <button type="button" data-step="adults" data-dir="-1" aria-label="Remove an adult">−</button>
+                    <span id="adultsCount" aria-live="polite">2</span>
+                    <button type="button" data-step="adults" data-dir="1" aria-label="Add an adult">+</button>
+                  </div>
+                </div>
+                <div class="guest-row">
+                  <div>
+                    <strong>Children</strong>
+                    <em>Ages 0–17</em>
+                  </div>
+                  <div class="stepper">
+                    <button type="button" data-step="children" data-dir="-1" aria-label="Remove a child">−</button>
+                    <span id="childrenCount" aria-live="polite">0</span>
+                    <button type="button" data-step="children" data-dir="1" aria-label="Add a child">+</button>
+                  </div>
+                </div>
+                <div class="guest-row">
+                  <div>
+                    <strong id="unitStepLabel">Rooms</strong>
+                    <em>Booked at the same rate</em>
+                  </div>
+                  <div class="stepper">
+                    <button type="button" data-step="rooms" data-dir="-1" aria-label="Remove a room">−</button>
+                    <span id="roomsCount" aria-live="polite">1</span>
+                    <button type="button" data-step="rooms" data-dir="1" aria-label="Add a room">+</button>
+                  </div>
+                </div>
+                <p class="guest-note">The stay total is nightly rate × nights × rooms.</p>
+                <button class="guest-done" type="button" data-close-guests>Done</button>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <div class="p-main">
+          <section class="p-section" id="about" aria-labelledby="aboutTitle">
+            <p class="kicker" id="aboutKicker">Overview</p>
+            <h2 id="aboutTitle">About this stay</h2>
+            <div class="about" id="aboutBody">
+              <span class="skel skel-block"></span>
+            </div>
+          </section>
+
+          <section class="p-section" id="amenities" aria-labelledby="amenitiesTitle">
+            <p class="kicker">Facilities</p>
+            <h2 id="amenitiesTitle">What this place offers</h2>
+            <div id="amenitiesBody"><span class="skel skel-block"></span></div>
+          </section>
+
+          <section class="p-section" id="rooms" aria-labelledby="roomsTitle">
+            <div class="rooms-head">
+              <div>
+                <p class="kicker">Availability</p>
+                <h2 id="roomsTitle">Choose your room</h2>
+                <p class="sub" id="roomsMeta" aria-live="polite"></p>
+              </div>
+            </div>
+            <div class="room-filters" id="roomFilters" role="group" aria-label="Filter rooms"></div>
+            <div class="room-list" id="roomList" aria-live="polite"></div>
+          </section>
+
+          <section class="p-section" id="reviews" aria-labelledby="reviewsTitle">
+            <p class="kicker">Guest reviews</p>
+            <h2 id="reviewsTitle">What guests say</h2>
+            <div id="reviewsBody"><span class="skel skel-block"></span></div>
+          </section>
+
+          <section class="p-section" id="location" aria-labelledby="locationTitle">
+            <p class="kicker">Location</p>
+            <h2 id="locationTitle">Where you will be</h2>
+            <div id="locationBody"><span class="skel skel-block"></span></div>
+          </section>
+
+          <section class="p-section" id="rules" aria-labelledby="rulesTitle">
+            <p class="kicker">Before you book</p>
+            <h2 id="rulesTitle">House rules</h2>
+            <div id="rulesBody"><span class="skel skel-block"></span></div>
+          </section>
+
+          <section class="p-section" id="faq" aria-labelledby="faqTitle">
+            <p class="kicker">Questions</p>
+            <h2 id="faqTitle">Good to know</h2>
+            <div class="faq" id="faqBody"></div>
+          </section>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-grid">
+      <div>
+        <a class="logo" href="index.html">
+          <svg class="logo-mark" viewBox="0 0 40 40" width="32" height="32" aria-hidden="true">
+            <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M3 34c7.2.2 11.2-6.2 14.2-11.4"/>
+            <circle cx="3.2" cy="34" r="1.55" fill="currentColor"/>
+            <g transform="translate(13 1.5) scale(1.12)" fill="currentColor">
+              <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>
+            </g>
+          </svg>
+          Portico
+        </a>
+        <p>A concentrated stay list. Search, price, and book one house at a time.</p>
+      </div>
+      <div>
+        <h2>Visit</h2>
+        <a href="index.html#hero">Search</a>
+        <a href="index.html#list">Properties</a>
+        <a href="index.html#notes">Stories</a>
+      </div>
+      <div>
+        <h2>Account</h2>
+        <button type="button" data-auth="signin">Sign in</button>
+        <button type="button" data-auth="register">Register</button>
+      </div>
+      <div>
+        <h2>This page</h2>
+        <p>Rooms, prices and availability come from mock data until the API is in place. Nothing is charged.</p>
+      </div>
+    </div>
+    <div class="wrap legal">
+      <p>© 2026 Portico. Photographs from Unsplash, used for this design study.</p>
+    </div>
+  </footer>
+
+  <div class="mobile-bar" id="mobileBar" hidden>
+    <div class="mobile-bar-price">
+      <strong id="mobileTotal"></strong>
+      <span id="mobileMeta"></span>
+    </div>
+    <button class="search-btn" id="mobileReserve" type="button">Reserve</button>
+  </div>
+
+  <div class="lightbox" id="lightbox" hidden>
+    <div class="lightbox-panel" role="dialog" aria-modal="true" aria-label="Photo gallery">
+      <div class="lb-top">
+        <p id="lbCount" aria-live="polite"></p>
+        <button class="lb-close" type="button" data-close="lightbox" aria-label="Close gallery">×</button>
+      </div>
+      <figure class="lb-stage" id="lbStage">
+        <button class="lb-nav lb-prev" id="lbPrev" type="button" aria-label="Previous photo">←</button>
+        <img id="lbImage" src="data:," alt="">
+        <button class="lb-nav lb-next" id="lbNext" type="button" aria-label="Next photo">→</button>
+        <figcaption id="lbCaption"></figcaption>
+      </figure>
+      <div class="lb-thumbs" id="lbThumbs"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="reserveModal" hidden>
+    <button class="backdrop" type="button" data-close="reserve" aria-label="Close dialog"></button>
+    <div class="modal-panel reserve-panel" role="dialog" aria-modal="true" aria-labelledby="reserveTitle">
+      <button class="icon-x" type="button" data-close="reserve" aria-label="Close">×</button>
+      <div id="reserveStep">
+        <h2 id="reserveTitle">Confirm your stay</h2>
+        <div class="reserve-summary" id="reserveSummary"></div>
+        <form id="reserveForm" novalidate>
+          <label class="stack">Full name
+            <input name="name" type="text" required autocomplete="name" aria-describedby="reserveNameError">
+            <span class="field-error" id="reserveNameError"></span>
+          </label>
+          <label class="stack">Email
+            <input name="email" type="email" required autocomplete="email" aria-describedby="reserveEmailError">
+            <span class="field-error" id="reserveEmailError"></span>
+          </label>
+          <label class="stack"><span>Phone <em class="optional">optional</em></span>
+            <input name="phone" type="tel" autocomplete="tel">
+          </label>
+          <label class="stack"><span>Requests for the property <em class="optional">optional</em></span>
+            <textarea name="requests" rows="3" maxlength="400"></textarea>
+          </label>
+          <p class="reserve-error" id="reserveError" role="alert"></p>
+          <button class="search-btn auth-submit" id="reserveSubmit" type="submit">Confirm reservation</button>
+          <p class="preview-note">Preview only. No payment is taken and nothing is charged.</p>
+        </form>
+      </div>
+      <div class="reserve-done" id="reserveDone" hidden tabindex="-1"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="authModal" hidden>
+    <button class="backdrop" type="button" data-close="modal" aria-label="Close dialog"></button>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+      <button class="icon-x" type="button" data-close="modal" aria-label="Close">×</button>
+      <h2 id="authTitle">Sign in</h2>
+      <p class="auth-lede" id="authLede">Use the same door you will use when the API is connected.</p>
+      <form id="authForm">
+        <label class="stack" id="authNameWrap" hidden>Full name
+          <input id="authName" name="name" type="text" autocomplete="name">
+        </label>
+        <label class="stack">Email
+          <input name="email" type="email" required autocomplete="email">
+        </label>
+        <label class="stack">Password
+          <input name="password" type="password" required minlength="8" autocomplete="current-password">
+        </label>
+        <button class="search-btn auth-submit" id="authSubmit" type="submit">Sign in</button>
+        <button class="text-btn" id="authSwitch" type="button">New here? Create an account</button>
+      </form>
+      <p id="authDone" hidden></p>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script src="js/mock-properties.js?v=1" defer></script>
+  <script src="js/api.js?v=1" defer></script>
+  <script src="js/property.js?v=2" defer></script>
+</body>
+</html>

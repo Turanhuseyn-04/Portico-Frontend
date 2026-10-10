@@ -1113,6 +1113,8 @@ img.is-broken { opacity: 0; }
   background: var(--ink);
 }
 
+#videoTitle { color: #0f8a5f; }
+
 .video-track {
   display: flex;
   height: 100%;
@@ -1351,6 +1353,25 @@ img.is-broken { opacity: 0; }
 }
 
 .hold { width: 100%; margin-top: 18px; }
+
+.drawer-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  margin-top: 10px;
+  border: 1px solid var(--ink);
+  border-radius: 12px;
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.drawer-link:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
 
 .preview-note {
   margin-top: 10px;

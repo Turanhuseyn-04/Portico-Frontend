@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/home.css?v=18">
+  <link rel="stylesheet" href="css/home.css?v=20">
   <script>document.documentElement.classList.add("js");</script>
 </head>
 <body>
@@ -46,7 +46,7 @@
       <div class="wrap">
         <div class="hero-copy">
           <p class="kicker"><span>Stays, without the noise</span></p>
-          <h1>Fewer choices,<br>Better stays.</h1>
+          <h1>Fewer choices,<br>Better stays</h1>
           <p class="lede">Discover exceptional places to stay, carefully selected for your next getaway.</p>
         </div>
 
@@ -138,7 +138,7 @@
         <div class="section-head reveal">
           <div>
             <p class="kicker">Trending</p>
-            <h2 id="trendTitle">Top trending destinations.</h2>
+            <h2 id="trendTitle">Top trending destinations</h2>
           </div>
           <div class="arrows">
             <button type="button" id="trendPrev" aria-label="Previous destinations">←</button>
@@ -156,7 +156,7 @@
         <div class="section-head reveal">
           <div>
             <p class="kicker">Property type</p>
-            <h2 id="propertyTitle">Find Your Place in the World.</h2>
+            <h2 id="propertyTitle">Find Your Place in the World</h2>
             <p class="sub">Discover exceptional stays, from boutique hotels to private villas.</p>
             <p class="property-kinds">Hotels · Apartments · Resorts · Villas</p>
           </div>
@@ -187,23 +187,23 @@
         <div class="section-head reveal">
           <div>
             <p class="kicker">How the price works</p>
-            <h2 id="rulesTitle">Three rules, said out loud.</h2>
+            <h2 id="rulesTitle">Three rules, said out loud</h2>
           </div>
         </div>
         <div class="offers">
           <article class="offer reveal">
             <span>01</span>
-            <h3>The total is nights times rate.</h3>
+            <h3>The total is nights times rate</h3>
             <p>Search with dates and a card switches from a nightly rate to the stay total. The sum is on the card before you continue.</p>
           </article>
           <article class="offer reveal">
             <span>02</span>
-            <h3>Cancellation is a date.</h3>
+            <h3>Cancellation is a date</h3>
             <p>Free cancellation runs until three days before check-in, and only on houses that offer it. Others say non-refundable.</p>
           </article>
           <article class="offer reveal">
             <span>03</span>
-            <h3>If it cannot sleep you, it says so.</h3>
+            <h3>If it cannot sleep you, it says so</h3>
             <p>A house stays on the list when the group is too large. It does not pretend the room still fits.</p>
           </article>
         </div>
@@ -215,7 +215,7 @@
         <div class="section-head reveal">
           <div>
             <p class="kicker">The list</p>
-            <h2 id="listTitle">Houses you can actually count.</h2>
+            <h2 id="listTitle">Top properties to stay</h2>
             <p class="sub" id="listMeta" aria-live="polite"></p>
           </div>
           <label class="sort">Sort
@@ -230,7 +230,12 @@
       </div>
     </section>
 
-    <section class="video-slider" id="videoSlider" aria-label="Featured stays">
+    <section class="video-slider" id="videoSlider" aria-labelledby="videoTitle">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <h2 id="videoTitle">Some places stay with you</h2>
+        </div>
+      </div>
       <div class="video-band">
         <div class="video-track" id="videoTrack">
           <div class="video-slide"><video src="assets/videos/villas/14041585_1920_1080_25fps.mp4" muted loop playsinline preload="auto" disablepictureinpicture aria-hidden="true"></video></div>
@@ -248,7 +253,7 @@
         <div class="section-head reveal">
           <div>
             <p class="kicker">After checkout</p>
-            <h2 id="notesTitle">What guests mention.</h2>
+            <h2 id="notesTitle">What guests mention</h2>
           </div>
         </div>
         <div class="notes">
@@ -280,7 +285,7 @@
     <section class="close-band" aria-labelledby="closeTitle">
       <div class="wrap reveal">
         <p class="kicker">Before you open another tab</p>
-        <h2 id="closeTitle">If it is not on this list, we are not selling it.</h2>
+        <h2 id="closeTitle">If it is not on this list, we are not selling it</h2>
         <a class="btn-copper" href="#hero">Search the list</a>
       </div>
     </section>
@@ -354,6 +359,6 @@
   </div>
 
   <div class="toast" id="toast" role="status"></div>
-  <script src="js/home.js?v=18" defer></script>
+  <script src="js/home.js?v=20" defer></script>
 </body>
 </html>

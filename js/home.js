@@ -394,7 +394,7 @@ function renderList() {
   if (!list.length) {
     const place = state.query && state.query.destination ? ` in ${escapeHtml(state.query.destination)}` : "";
     stayList.innerHTML = `<div class="empty">
-      <h3>Nothing on the list${place}.</h3>
+      <h3>Nothing on the list${place}</h3>
       <p>Portico keeps eight houses. Clear the city or the property type.</p>
       <button class="btn-ink" type="button" data-reset>Clear the filter</button>
     </div>`;
@@ -728,11 +728,24 @@ function openDrawer(id) {
       <p class="cancel${policy.locked ? " is-locked" : ""}">${escapeHtml(policy.text)}</p>
       <div class="pills">${stay.amenities.map((item) => `<span class="pill">${escapeHtml(item)}</span>`).join("")}</div>
       <button class="search-btn hold" type="button" data-hold ${ok ? "" : "disabled"}>${ok ? "Hold these dates" : "Too small for this group"}</button>
+      <a class="drawer-link" href="${propertyLink(stay)}">See rooms, photos and reviews</a>
       <p class="preview-note">Preview only. This page does not hold a room yet.</p>
     </div>`;
   drawer.hidden = false;
   document.body.classList.add("no-scroll");
   drawer.querySelector(".icon-x").focus();
+}
+
+function propertyLink(stay) {
+  const query = new URLSearchParams({ id: stay.id });
+  if (state.query) {
+    query.set("checkIn", toKey(state.query.checkIn));
+    query.set("checkOut", toKey(state.query.checkOut));
+    query.set("adults", String(state.query.adults));
+    if (state.query.children) query.set("children", String(state.query.children));
+    query.set("rooms", String(state.query.rooms));
+  }
+  return `property.html?${query}`;
 }
 
 function closeDrawer() {
