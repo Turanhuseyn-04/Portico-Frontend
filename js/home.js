@@ -1122,6 +1122,23 @@ document.addEventListener("keydown", (event) => {
 });
 
 const hero = $("hero");
+const heroSlides = [...document.querySelectorAll("#heroSlides .hero-slide")];
+let heroIndex = 0;
+let heroTimer = 0;
+
+function showHero(index) {
+  heroIndex = (index + heroSlides.length) % heroSlides.length;
+  heroSlides.forEach((slide, i) => slide.classList.toggle("is-on", i === heroIndex));
+}
+
+function startHero() {
+  window.clearInterval(heroTimer);
+  if (heroSlides.length < 2) return;
+  heroTimer = window.setInterval(() => showHero(heroIndex + 1), 5000);
+}
+
+startHero();
+
 const driftTargets = () => document.querySelectorAll(".trend-card img, .stay-media img, .video-band video, .property-card img");
 
 const videoTrack = $("videoTrack");

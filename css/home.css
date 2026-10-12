@@ -239,12 +239,35 @@ h2 {
   padding: 112px 0 42px;
   color: white;
   background-color: #142033;
-  background-image:
-    linear-gradient(180deg, rgba(8, 14, 28, 0.62) 0%, rgba(8, 14, 28, 0.12) 28%, rgba(8, 14, 28, 0.08) 52%, rgba(8, 14, 28, 0.55) 100%),
-    url("../assets/hero.jpg");
-  background-size: cover;
-  background-position: center calc(42% + var(--drift, 0px));
 }
+
+.hero-slides {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center 42%;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.hero-slide.is-on { opacity: 1; }
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(8, 14, 28, 0.62) 0%, rgba(8, 14, 28, 0.12) 28%, rgba(8, 14, 28, 0.08) 52%, rgba(8, 14, 28, 0.55) 100%);
+}
+
+.hero .wrap { position: relative; z-index: 2; }
 
 .hero-copy { max-width: 740px; margin-bottom: 28px; }
 

@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/home.css?v=22">
+  <link rel="stylesheet" href="css/home.css?v=25">
   <script>document.documentElement.classList.add("js");</script>
 </head>
 <body>
@@ -43,6 +43,12 @@
 
   <main>
     <section class="hero" id="hero">
+      <div class="hero-slides" id="heroSlides" aria-hidden="true">
+        <div class="hero-slide is-on" style="background-image: url('assets/hero.jpg')"></div>
+        <div class="hero-slide" style="background-image: url('assets/amalfi.jpg')"></div>
+        <div class="hero-slide" style="background-image: url('assets/lisbon.jpg')"></div>
+        <div class="hero-slide" style="background-image: url('assets/kyoto.jpg')"></div>
+      </div>
       <div class="wrap">
         <div class="hero-copy">
           <p class="kicker"><span>Stays, without the noise</span></p>
@@ -362,6 +368,6 @@
   </div>
 
   <div class="toast" id="toast" role="status"></div>
-  <script src="js/home.js?v=20" defer></script>
+  <script src="js/home.js?v=26" defer></script>
 </body>
 </html>
