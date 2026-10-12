@@ -1393,6 +1393,34 @@ img.is-broken { opacity: 0; }
 
 .empty .change-search { margin-top: 16px; }
 
+.destination-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+  margin-bottom: 22px;
+}
+
+.destination-filters .stack {
+  min-width: min(280px, 100%);
+  margin-bottom: 0;
+}
+
+.destination-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.destination-grid .trend-card {
+  flex: none;
+  width: auto;
+  height: 320px;
+  text-decoration: none;
+}
+
+.destination-grid .empty { grid-column: 1 / -1; }
+
 .legal-page h1 {
   margin: 0 0 14px;
   font-size: clamp(42px, 6vw, 68px);
