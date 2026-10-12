@@ -1275,6 +1275,10 @@ img.is-broken { opacity: 0; }
 
 .footer p { max-width: 36ch; }
 
+.footer-reach { margin-top: 14px; }
+
+.footer-reach + .footer-reach { margin-top: 2px; }
+
 .legal {
   display: flex;
   flex-wrap: wrap;
