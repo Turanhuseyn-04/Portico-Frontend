@@ -1061,14 +1061,7 @@ trendTimer = window.setInterval(tickTrend, 3600);
 $("propertiesGrid").addEventListener("click", (event) => {
   const card = event.target.closest(".property-card");
   if (!card) return;
-  state.property = state.property === card.dataset.property ? "" : card.dataset.property;
-  document.querySelectorAll(".property-card").forEach((item) => {
-    const on = item.dataset.property === state.property;
-    item.classList.toggle("is-on", on);
-    item.setAttribute("aria-pressed", String(on));
-  });
-  renderList();
-  $("list").scrollIntoView({ behavior: "smooth", block: "start" });
+  window.location.href = `types.html?type=${encodeURIComponent(card.dataset.property)}`;
 });
 
 drawer.addEventListener("click", (event) => {

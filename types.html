@@ -42,27 +42,30 @@
   </header>
 
   <main>
-    <section class="section results" id="types" data-asset-root="assets/" data-search="search.html">
+    <section class="section results" id="types" data-asset-root="assets/" data-property="property.html">
       <div class="wrap">
         <div class="section-head">
           <div>
             <p class="kicker">Property type</p>
-            <h1>Hotels, apartments, resorts, villas</h1>
-            <p class="sub" id="typeMeta" aria-live="polite">Choose a type to see its stays.</p>
+            <h1 id="typeTitle">All property types</h1>
+            <p class="sub" id="typeMeta" aria-live="polite">The stays for hotels, apartments, resorts, and villas.</p>
           </div>
         </div>
         <div class="destination-filters">
-          <label class="stack">Type
-            <input id="typeFilter" type="search" placeholder="Hotel, villa, …" autocomplete="off">
-          </label>
-          <label class="sort">Show
-            <select id="typeStay">
-              <option value="all">All types</option>
-              <option value="stays">With a stay</option>
+          <label class="sort">Type
+            <select id="typePick">
+              <option value="">All types</option>
+              <option value="Hotel">Hotels</option>
+              <option value="Apartment">Apartments</option>
+              <option value="Resort">Resorts</option>
+              <option value="Villa">Villas</option>
             </select>
           </label>
+          <label class="stack">Stay or city
+            <input id="typeFilter" type="search" placeholder="Name or city" autocomplete="off">
+          </label>
         </div>
-        <div class="properties" id="typeGrid"></div>
+        <div id="stayList"></div>
       </div>
     </section>
   </main>
@@ -129,6 +132,6 @@
     </div>
   </div>
 
-  <script src="js/types.js?v=1" defer></script>
+  <script src="js/types.js?v=2" defer></script>
 </body>
 </html>

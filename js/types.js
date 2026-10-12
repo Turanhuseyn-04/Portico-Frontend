@@ -2,60 +2,124 @@
 
 const root = document.getElementById("types");
 const assetRoot = root.dataset.assetRoot || "assets/";
-const searchPage = root.dataset.search || "search.html";
+const propertyPage = root.dataset.property || "property.html";
+const moneyFmt = new Intl.NumberFormat("en-GB", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
+const heartSvg = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 20s-7-4.4-7-9a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 4.6-7 9-7 9z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>';
+const saved = new Set();
+const typeNames = { Hotel: "Hotels", Apartment: "Apartments", Resort: "Resorts", Villa: "Villas" };
 
-// Stand-in catalog. Portico.Api will return these types and apply the filter.
-const types = [
-  { id: "Hotel", name: "Hotels", image: "hotel.jpg", stays: 3 },
-  { id: "Apartment", name: "Apartments", image: "apartment.jpg", stays: 2 },
-  { id: "Resort", name: "Resorts", image: "resort.jpg", stays: 1 },
-  { id: "Villa", name: "Villas", image: "villa.jpg", stays: 2 }
+// Stand-in catalog. Portico.Api will return these stays and apply the type filter.
+const stays = [
+  { id: "marble", name: "The Marble Court", city: "Lisbon", country: "Portugal", area: "Chiado", type: "Suite", property: "Hotel", score: 9.4, reviews: 186, price: 242, maxGuests: 3, cancel: true, scarce: true, amenities: ["Courtyard", "Breakfast", "River walk"], image: "lisbon.jpg" },
+  { id: "screens", name: "House of Paper Screens", city: "Kyoto", country: "Japan", area: "Gion", type: "Room", property: "Hotel", score: 9.1, reviews: 143, price: 198, maxGuests: 2, cancel: true, scarce: false, amenities: ["Cedar bath", "Garden", "Work desk"], image: "kyoto.jpg" },
+  { id: "atelier", name: "The North Atelier", city: "Copenhagen", country: "Denmark", area: "Nørrebro", type: "Studio", property: "Apartment", score: 8.8, reviews: 97, price: 176, maxGuests: 2, cancel: true, scarce: false, amenities: ["Work desk", "Courtyard", "Bike"], image: "copenhagen.jpg" },
+  { id: "riad", name: "Riad of Small Doors", city: "Marrakech", country: "Morocco", area: "Medina", type: "House", property: "Villa", score: 9.6, reviews: 221, price: 164, maxGuests: 5, cancel: true, scarce: false, amenities: ["Whole house", "Roof terrace", "Breakfast"], image: "marrakech.jpg" },
+  { id: "orchard", name: "Cliff Orchard", city: "Amalfi", country: "Italy", area: "Above the port", type: "Suite", property: "Resort", score: 9.3, reviews: 118, price: 310, maxGuests: 3, cancel: true, scarce: true, amenities: ["Sea view", "Breakfast", "Terrace"], image: "amalfi.jpg" },
+  { id: "patio", name: "Casa del Patio", city: "Oaxaca", country: "Mexico", area: "Centro", type: "Room", property: "Hotel", score: 8.9, reviews: 76, price: 132, maxGuests: 3, cancel: false, scarce: false, amenities: ["Patio", "Fan", "Walk to market"], image: "oaxaca.jpg" },
+  { id: "greenhouse", name: "Greenhouse No. 4", city: "Porto", country: "Portugal", area: "Cedofeita", type: "Studio", property: "Apartment", score: 9.0, reviews: 64, price: 154, maxGuests: 2, cancel: true, scarce: false, amenities: ["Kitchenette", "Courtyard", "Work desk"], image: "porto.jpg" },
+  { id: "gallery", name: "The Long Gallery", city: "Edinburgh", country: "Scotland", area: "Old Town", type: "House", property: "Villa", score: 9.2, reviews: 159, price: 208, maxGuests: 4, cancel: true, scarce: false, amenities: ["Whole house", "Fireplace", "Old Town"], image: "edinburgh.jpg" }
 ];
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
 }
 
-function searchHref(id) {
-  const params = new URLSearchParams({ property: id });
-  return `${searchPage}${searchPage.includes("?") ? "&" : "?"}${params}`;
+function money(amount) {
+  return moneyFmt.format(amount);
+}
+
+function scoreLabel(score) {
+  if (score >= 9) return "Wonderful";
+  if (score >= 8) return "Excellent";
+  return "Good";
+}
+
+function stayHref(stay) {
+  return `${propertyPage}?${new URLSearchParams({ id: stay.id })}`;
 }
 
 // Temporary filter. Replace this with the Portico.Api property-type query.
-function filterTypes(query, onlyStays) {
+function filterStays(type, query) {
   const needle = query.trim().toLowerCase();
-  return types.filter((type) => {
-    if (onlyStays && type.stays < 1) return false;
+  return stays.filter((stay) => {
+    if (type && stay.property !== type) return false;
     if (!needle) return true;
-    return type.name.toLowerCase().includes(needle) || type.id.toLowerCase().includes(needle);
+    return [stay.name, stay.city, stay.country, stay.area].some((value) => value.toLowerCase().includes(needle));
   });
 }
 
-function card(type) {
-  const stayLabel = type.stays === 1 ? "1 stay" : `${type.stays} stays`;
-  return `<a class="property-card" href="${escapeHtml(searchHref(type.id))}">
-    <img src="${assetRoot}${type.image}" alt="">
-    <strong>${escapeHtml(type.name)}</strong>
-    <span class="type-count">${escapeHtml(stayLabel)}</span>
-  </a>`;
+function stayCard(stay) {
+  const href = stayHref(stay);
+  const savedNow = saved.has(stay.id);
+  const policy = stay.cancel ? "Free cancellation until 3 days before check-in." : "Non-refundable once booked.";
+  return `<article class="stay" data-href="${escapeHtml(href)}" tabindex="0">
+    <div class="stay-media">
+      <img src="${assetRoot}${stay.image}" alt="${escapeHtml(stay.name)} in ${escapeHtml(stay.city)}" width="800" height="600" loading="lazy">
+      <button class="heart" type="button" data-stay="${stay.id}" data-name="${escapeHtml(stay.name)}" aria-pressed="${savedNow}" aria-label="${savedNow ? "Remove" : "Save"} ${escapeHtml(stay.name)}">${heartSvg}</button>
+    </div>
+    <div class="stay-body">
+      <p class="stay-type">${escapeHtml(stay.property)} · ${escapeHtml(stay.type)} · sleeps ${stay.maxGuests}</p>
+      <h3><a href="${escapeHtml(href)}">${escapeHtml(stay.name)}</a></h3>
+      <p class="where-line">${escapeHtml(stay.area)} · ${escapeHtml(stay.city)}, ${escapeHtml(stay.country)}</p>
+      <p class="cancel${stay.cancel ? "" : " is-locked"}">${escapeHtml(policy)}</p>
+      ${stay.scarce ? '<p class="scarce">Only 1 room left at this rate</p>' : ""}
+      <div class="pills">${stay.amenities.map((item) => `<span class="pill">${escapeHtml(item)}</span>`).join("")}</div>
+    </div>
+    <div class="stay-side">
+      <div class="rating">
+        <div><strong>${scoreLabel(stay.score)}</strong><span>${stay.reviews} reviews</span></div>
+        <span class="score">${stay.score.toFixed(1)}</span>
+      </div>
+      <div class="stay-price"><span class="from">from</span><strong>${money(stay.price)}</strong><span class="per">per night</span></div>
+    </div>
+  </article>`;
 }
 
 function render() {
+  const type = document.getElementById("typePick").value;
   const query = document.getElementById("typeFilter").value;
-  const onlyStays = document.getElementById("typeStay").value === "stays";
-  const found = filterTypes(query, onlyStays);
-  const grid = document.getElementById("typeGrid");
+  const found = filterStays(type, query);
+  const list = document.getElementById("stayList");
+  const title = document.getElementById("typeTitle");
   const meta = document.getElementById("typeMeta");
-  meta.textContent = `${found.length} of ${types.length} property types`;
+  title.textContent = type ? typeNames[type] : "All property types";
+  meta.textContent = `${found.length} of ${stays.length} stays`;
   if (!found.length) {
-    grid.innerHTML = `<div class="empty"><h2>No property type matches</h2><p>Try Hotels, Apartments, Resorts, or Villas.</p></div>`;
+    list.innerHTML = `<div class="empty"><h2>No stay matches</h2><p>Try another type, or clear the city.</p></div>`;
     return;
   }
-  grid.innerHTML = found.map(card).join("");
+  list.innerHTML = found.map(stayCard).join("");
 }
 
+const initialType = new URLSearchParams(window.location.search).get("type") || "";
+if (typeNames[initialType]) document.getElementById("typePick").value = initialType;
 document.getElementById("typeFilter").addEventListener("input", render);
-document.getElementById("typeStay").addEventListener("change", render);
+document.getElementById("typePick").addEventListener("change", render);
+document.getElementById("stayList").addEventListener("click", (event) => {
+  const heart = event.target.closest(".heart");
+  if (heart) {
+    event.preventDefault();
+    event.stopPropagation();
+    const id = heart.dataset.stay;
+    if (saved.has(id)) saved.delete(id);
+    else saved.add(id);
+    const on = saved.has(id);
+    heart.setAttribute("aria-pressed", String(on));
+    heart.setAttribute("aria-label", `${on ? "Remove" : "Save"} ${heart.dataset.name}`);
+    return;
+  }
+  if (event.target.closest("a")) return;
+  const card = event.target.closest("[data-href]");
+  if (card) window.location.href = card.dataset.href;
+});
+document.getElementById("stayList").addEventListener("keydown", (event) => {
+  if (event.key !== "Enter" && event.key !== " ") return;
+  if (event.target.closest("a, button")) return;
+  const card = event.target.closest("[data-href]");
+  if (!card) return;
+  event.preventDefault();
+  window.location.href = card.dataset.href;
+});
 render();
 
 const header = document.getElementById("header");
