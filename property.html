@@ -10,8 +10,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/home.css?v=20">
-  <link rel="stylesheet" href="css/property.css?v=3">
+  <link rel="stylesheet" href="css/home.css?v=21">
+  <link rel="stylesheet" href="css/property.css?v=5">
   <script>document.documentElement.classList.add("js");</script>
 </head>
 <body class="property-page">
@@ -96,6 +96,7 @@
       <div class="wrap p-layout">
         <aside class="p-aside" aria-label="Your stay">
           <div class="book-card" id="bookCard">
+            <div class="book-scroll">
             <div class="book-price" id="bookPrice"><span class="skel" style="width: 140px"></span></div>
             <div class="book-fields">
               <div class="book-dates" id="datesField">
@@ -116,8 +117,11 @@
             <p class="book-error" id="bookError" role="alert"></p>
             <div class="book-room" id="bookRoom"></div>
             <div class="book-bill" id="bookBill" aria-live="polite"></div>
-            <button class="search-btn book-cta" id="reserveBtn" type="button" aria-describedby="bookError">Reserve</button>
-            <p class="book-note" id="bookNote">You will not be charged yet.</p>
+            <div class="book-actions">
+              <button class="search-btn book-cta" id="reserveBtn" type="button" aria-describedby="bookError">Reserve</button>
+              <p class="book-note" id="bookNote">You will not be charged yet.</p>
+            </div>
+            </div>
 
             <div class="popover" id="calPopover" hidden></div>
             <div class="popover guest-popover" id="guestPopover" hidden>
@@ -250,6 +254,7 @@
     </div>
     <div class="wrap legal">
       <p>© 2026 Portico. Photographs from Unsplash, used for this design study.</p>
+      <p class="legal-links"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></p>
     </div>
   </footer>
 
@@ -334,6 +339,6 @@
   <div class="toast" id="toast" role="status"></div>
   <script src="js/mock-properties.js?v=1" defer></script>
   <script src="js/api.js?v=1" defer></script>
-  <script src="js/property.js?v=2" defer></script>
+  <script src="js/property.js?v=3" defer></script>
 </body>
 </html>

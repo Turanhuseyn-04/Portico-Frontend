@@ -591,6 +591,14 @@ function selectionProblem(room, status) {
   return "";
 }
 
+function revealReserve() {
+  const scroller = bookCard.querySelector(".book-scroll");
+  const actions = bookCard.querySelector(".book-actions");
+  if (!scroller || !actions) return;
+  const hidden = actions.getBoundingClientRect().bottom - scroller.getBoundingClientRect().bottom;
+  if (hidden > 4) scroller.scrollTop += hidden + 8;
+}
+
 function renderBooking() {
   if (!state.property) return;
   const c = copy();
@@ -632,6 +640,7 @@ function renderBooking() {
   $("bookBill").innerHTML = bill;
   $("reserveBtn").textContent = total ? `Reserve for ${money(total)}` : "Reserve";
   $("bookNote").textContent = total ? "You will not be charged yet." : `The total is nightly rate × nights × ${c.units}.`;
+  revealReserve();
 
   $("mobileTotal").textContent = total ? money(total) : room ? money(room.price) : `from ${money(minPrice())}`;
   $("mobileMeta").textContent = total ? `${count(nights, "night", "nights")} · ${room.name}` : room ? `per night · ${room.name}` : "per night";
