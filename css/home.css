@@ -1848,13 +1848,22 @@ a.property-card { text-decoration: none; }
   .trip-facts { grid-template-columns: 1fr; }
 }
 
+#account .wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
 .account-panel {
+  width: 100%;
   max-width: 460px;
   margin-top: 8px;
   background: var(--white);
   border: 1px solid var(--line);
   border-radius: 20px;
   padding: 28px 24px 24px;
+  text-align: left;
 }
 
 .account-error {
