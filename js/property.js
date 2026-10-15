@@ -1097,6 +1097,41 @@ function validateReserve() {
   return nameOk && emailOk;
 }
 
+function reservationPage(reference) {
+  return `reservation.html?ref=${encodeURIComponent(reference)}`;
+}
+
+function rememberReservation(reference, room, status) {
+  const address = state.property.address || {};
+  const photo = (state.property.gallery && state.property.gallery[0] && state.property.gallery[0].src) || room.image;
+  const trip = {
+    reference,
+    propertyId: state.property.id,
+    propertyName: state.property.name,
+    city: address.city || "",
+    country: address.country || "",
+    area: address.area || "",
+    image: photo,
+    roomId: room.id,
+    roomName: room.name,
+    checkIn: toKey(state.checkIn),
+    checkOut: toKey(state.checkOut),
+    refundable: Boolean(room.refundable),
+    nightly: room.price,
+    total: status.total,
+    rooms: state.rooms,
+    adults: state.adults,
+    children: state.children
+  };
+  try {
+    const all = JSON.parse(sessionStorage.getItem("portico-reservations") || "{}");
+    all[reference] = trip;
+    sessionStorage.setItem("portico-reservations", JSON.stringify(all));
+  } catch {
+    /* The confirmation link still opens. A saved trip needs this browser. */
+  }
+}
+
 async function submitReserve(event) {
   event.preventDefault();
   $("reserveError").textContent = "";
@@ -1121,12 +1156,15 @@ async function submitReserve(event) {
       phone: fields.phone.value.trim(),
       requests: fields.requests.value.trim()
     });
+    const status = roomStatus(room);
+    rememberReservation(result.reference, room, status);
     const done = $("reserveDone");
     done.innerHTML = `<p class="kicker">Reservation preview</p>
       <h2>You are on the list</h2>
       <p class="done-ref">Reference <strong>${escapeHtml(result.reference)}</strong></p>
-      ${bookingSummary(room, roomStatus(room))}
+      ${bookingSummary(room, status)}
       <p class="preview-note">A confirmation would go to ${escapeHtml(fields.email.value.trim())}. Nothing was charged. Payments arrive with the API.</p>
+      <a class="change-search trip-open" href="${escapeHtml(reservationPage(result.reference))}">Open this reservation</a>
       <button class="search-btn auth-submit" type="button" data-close="reserve">Done</button>`;
     $("reserveStep").hidden = true;
     done.hidden = false;

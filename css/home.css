@@ -1787,3 +1787,58 @@ a.property-card { text-decoration: none; }
   .hero h1 { font-size: 46px; }
 }
 
+.trip {
+  display: grid;
+  grid-template-columns: minmax(220px, 340px) 1fr;
+  gap: 28px;
+  align-items: start;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 16px;
+}
+
+.trip img {
+  width: 100%;
+  height: 100%;
+  min-height: 240px;
+  object-fit: cover;
+  border-radius: 16px;
+  background: #d9cbb8;
+}
+
+.trip h2 {
+  margin: 4px 0 0;
+  font-size: clamp(32px, 4vw, 48px);
+  line-height: 1;
+}
+
+.trip-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 24px;
+  margin: 22px 0 8px;
+}
+
+.trip-facts dt {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.trip-facts dd {
+  margin: 2px 0 0;
+  font-family: var(--serif);
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.trip-facts dd.is-locked { color: var(--copper); }
+
+.trip-open { margin-top: 18px; }
+
+@media (max-width: 800px) {
+  .trip { grid-template-columns: 1fr; }
+
+  .trip-facts { grid-template-columns: 1fr; }
+}
+
