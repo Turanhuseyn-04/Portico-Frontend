@@ -1,0 +1,58 @@
+"use strict";
+
+const root = document.getElementById("account");
+const form = document.getElementById("accountForm");
+const mode = root.dataset.mode || "signin";
+const header = document.getElementById("header");
+const nav = document.getElementById("nav");
+const navToggle = document.getElementById("navToggle");
+
+function closeMenu() {
+  if (!nav || !navToggle) return;
+  nav.classList.remove("is-open");
+  header.classList.remove("menu-open");
+  navToggle.setAttribute("aria-expanded", "false");
+  navToggle.setAttribute("aria-label", "Open menu");
+}
+
+if (navToggle) {
+  navToggle.addEventListener("click", () => {
+    const open = nav.classList.toggle("is-open");
+    header.classList.toggle("menu-open", open);
+    navToggle.setAttribute("aria-expanded", String(open));
+    navToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+  });
+}
+
+document.addEventListener("click", (event) => {
+  if (event.target.closest(".nav a")) closeMenu();
+});
+
+if (mode === "signin") {
+  const params = new URLSearchParams(window.location.search);
+  const failed = root.dataset.failed === "true" || params.get("failed") === "1";
+  const email = form.elements.email.value || root.dataset.email || params.get("email") || "";
+  if (email) form.elements.email.value = email;
+  if (failed) {
+    document.getElementById("accountError").hidden = false;
+    document.getElementById("accountTitle").textContent = "Sign in failed";
+    document.title = "Sign in failed — Portico";
+    (email ? form.elements.password : form.elements.email).focus();
+  }
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    // Temporary. Portico.Api will accept or reject the password. This preview has no accounts.
+    const next = new URL(root.dataset.failedUrl, window.location.href);
+    next.searchParams.set("email", form.elements.email.value.trim());
+    window.location.href = next.href;
+  });
+} else {
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const email = form.elements.email.value.trim();
+    form.hidden = true;
+    const done = document.getElementById("accountDone");
+    done.hidden = false;
+    done.textContent = `Account preview for ${email}. Nothing was saved. Registration arrives with the API.`;
+  });
+}

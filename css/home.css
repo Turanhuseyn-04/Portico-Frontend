@@ -168,6 +168,12 @@ h2 {
 
 .nav a:hover::after { transform: scaleX(1); }
 
+.nav a.btn-line {
+  font-weight: 600;
+}
+
+.nav a.btn-line::after { content: none; }
+
 .btn-line {
   border: 1px solid currentColor;
   background: transparent;
@@ -1841,4 +1847,27 @@ a.property-card { text-decoration: none; }
 
   .trip-facts { grid-template-columns: 1fr; }
 }
+
+.account-panel {
+  max-width: 460px;
+  margin-top: 8px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 28px 24px 24px;
+}
+
+.account-error {
+  margin: 0 0 14px;
+  color: var(--copper);
+  font-weight: 600;
+}
+
+.account-switch {
+  display: inline-block;
+  margin-top: 14px;
+  color: var(--muted);
+}
+
+#accountDone { margin-top: 8px; }
 
