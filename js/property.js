@@ -1042,7 +1042,16 @@ function tryReserve() {
   }
   state.bookError = "";
   renderBooking();
-  openReserve();
+  const next = new URLSearchParams({
+    id: state.id,
+    room: room.id,
+    checkIn: toKey(state.checkIn),
+    checkOut: toKey(state.checkOut),
+    adults: String(state.adults),
+    rooms: String(state.rooms)
+  });
+  if (state.children) next.set("children", String(state.children));
+  window.location.href = `reserve.html?${next}`;
 }
 
 function bookingSummary(room, status) {

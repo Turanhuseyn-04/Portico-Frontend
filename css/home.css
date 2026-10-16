@@ -1878,6 +1878,64 @@ a.property-card { text-decoration: none; }
   color: var(--muted);
 }
 
+#reserve .wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+#reserve .section-head,
+#reserve .account-panel { width: 100%; max-width: 560px; }
+
+.reserve-stay {
+  display: grid;
+  grid-template-columns: 132px 1fr;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.reserve-stay img {
+  width: 132px;
+  height: 98px;
+  object-fit: cover;
+  border-radius: 12px;
+  background: #d9cbb8;
+}
+
+.reserve-stay h2 {
+  margin: 4px 0 0;
+  font-size: 28px;
+  line-height: 1.05;
+}
+
+.stack textarea {
+  min-height: 84px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: white;
+  font: inherit;
+  font-weight: 400;
+  resize: vertical;
+}
+
+.stack input[aria-invalid="true"],
+.stack textarea[aria-invalid="true"] { border-color: var(--warn); }
+
+.optional { color: var(--muted); font-style: normal; font-weight: 400; }
+
+.field-error { color: var(--warn); font-size: 13px; }
+
+.field-error:empty { display: none; }
+
+@media (max-width: 560px) {
+  .reserve-stay { grid-template-columns: 1fr; }
+
+  .reserve-stay img { width: 100%; height: 160px; }
+}
+
 #accountDone { margin-top: 8px; }
 
 .trip-list {
