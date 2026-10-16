@@ -2,13 +2,13 @@
 
 const root = document.getElementById("reserve");
 const assetRoot = root.dataset.assetRoot || "assets/";
-const reservationBase = root.dataset.reservation || "reservation.html?ref=";
+const paymentPage = root.dataset.payment || "payment.html";
 const homePage = root.dataset.home || "index.html";
 const propertyPage = root.dataset.property || "property.html";
 const moneyFmt = new Intl.NumberFormat("en-GB", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
 const dateFmt = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric" });
 const params = new URLSearchParams(window.location.search);
-const STORE = "portico-reservations";
+const CHECKOUT = "portico-checkout";
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
@@ -95,33 +95,6 @@ function readStay() {
   };
 }
 
-function remember(reference, property, room, stay, total) {
-  const address = property.address || {};
-  const photo = (property.gallery && property.gallery[0] && property.gallery[0].src) || room.image;
-  const trip = {
-    reference,
-    propertyId: property.id,
-    propertyName: property.name,
-    city: address.city || "",
-    country: address.country || "",
-    area: address.area || "",
-    image: photo,
-    roomId: room.id,
-    roomName: room.name,
-    checkIn: stay.checkIn,
-    checkOut: stay.checkOut,
-    refundable: Boolean(room.refundable),
-    nightly: room.price,
-    total,
-    rooms: stay.rooms,
-    adults: stay.adults,
-    children: stay.children
-  };
-  const all = JSON.parse(sessionStorage.getItem(STORE) || "{}");
-  all[reference] = trip;
-  sessionStorage.setItem(STORE, JSON.stringify(all));
-}
-
 function summaryHtml(property, room, stay, total, nights) {
   const address = property.address || {};
   const where = [address.area, address.city, address.country].filter(Boolean).join(" · ");
@@ -168,8 +141,8 @@ function formHtml() {
       <textarea name="requests" rows="3" maxlength="400"></textarea>
     </label>
     <p class="account-error" id="reserveError" role="alert" hidden></p>
-    <button class="search-btn auth-submit" id="reserveSubmit" type="submit">Confirm reservation</button>
-    <p class="preview-note">Preview only. No payment is taken and nothing is charged.</p>
+    <button class="search-btn auth-submit" id="reserveSubmit" type="submit">Continue to payment</button>
+    <p class="preview-note">Next is the card. Nothing is charged on this page.</p>
   </form>`;
 }
 
@@ -227,7 +200,7 @@ async function start() {
     }
     const submit = document.getElementById("reserveSubmit");
     submit.disabled = true;
-    submit.textContent = "Confirming…";
+    submit.textContent = "Continuing…";
     try {
       const offers = await PorticoApi.getAvailability(stay.id, stay.checkIn, stay.checkOut);
       const offer = offers.find((item) => item.roomId === stay.roomId);
@@ -236,29 +209,31 @@ async function start() {
         error.textContent = "That room was just taken for these dates. Choose another room or change your dates.";
         return;
       }
-      const result = await PorticoApi.createReservation({
-        propertyId: stay.id,
-        roomId: stay.roomId,
-        checkIn: stay.checkIn,
-        checkOut: stay.checkOut,
-        adults: stay.adults,
-        children: stay.children,
-        rooms: stay.rooms,
+      sessionStorage.setItem(CHECKOUT, JSON.stringify({
+        ...stay,
         name: form.elements.name.value.trim(),
         email: form.elements.email.value.trim(),
         phone: form.elements.phone.value.trim(),
         requests: form.elements.requests.value.trim()
+      }));
+      const next = new URLSearchParams({
+        id: stay.id,
+        room: stay.roomId,
+        checkIn: stay.checkIn,
+        checkOut: stay.checkOut,
+        adults: String(stay.adults),
+        rooms: String(stay.rooms)
       });
-      remember(result.reference, property, room, stay, result.total || total);
-      window.location.href = `${reservationBase}${encodeURIComponent(result.reference)}`;
+      if (stay.children) next.set("children", String(stay.children));
+      window.location.href = `${paymentPage}${paymentPage.includes("?") ? "&" : "?"}${next}`;
     } catch (failure) {
       error.hidden = false;
       error.textContent = failure && failure.message
         ? failure.message
-        : "The reservation did not go through. Nothing was charged.";
+        : "The stay could not be continued. Nothing was charged.";
     } finally {
       submit.disabled = false;
-      submit.textContent = "Confirm reservation";
+      submit.textContent = "Continue to payment";
     }
   });
 }

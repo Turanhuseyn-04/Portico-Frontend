@@ -1900,7 +1900,8 @@ a.property-card { text-decoration: none; }
 }
 
 #reserve .wrap,
-#cancel .wrap {
+#cancel .wrap,
+#payment .wrap {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1910,7 +1911,15 @@ a.property-card { text-decoration: none; }
 #reserve .section-head,
 #reserve .account-panel,
 #cancel .section-head,
-#cancel .account-panel { width: 100%; max-width: 560px; }
+#cancel .account-panel,
+#payment .section-head,
+#payment .account-panel { width: 100%; max-width: 560px; }
+
+.card-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
 
 .reserve-stay {
   display: grid;
