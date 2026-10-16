@@ -72,9 +72,10 @@ function row(trip) {
       <p class="stay-type">${escapeHtml(trip.reference)}</p>
       <h2>${escapeHtml(trip.propertyName)}</h2>
       <p class="where-line">${escapeHtml(formatDay(trip.checkIn))} – ${escapeHtml(formatDay(trip.checkOut))}</p>
+      ${trip.cancelled ? `<p class="where-line">Cancelled</p>` : ""}
       ${where ? `<p class="where-line">${escapeHtml(where)}</p>` : ""}
     </div>
-    <p class="trip-total">${escapeHtml(money(trip.total))}</p>
+    <p class="trip-total">${escapeHtml(money(trip.cancelled && trip.refund ? 0 : trip.total))}</p>
   </a>`;
 }
 

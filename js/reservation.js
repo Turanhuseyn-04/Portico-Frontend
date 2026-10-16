@@ -5,6 +5,7 @@ const assetRoot = root.dataset.assetRoot || "assets/";
 const propertyPage = root.dataset.property || "property.html";
 const selfPage = root.dataset.self || "reservation.html?ref=";
 const tripsPage = root.dataset.trips || "trips.html";
+const cancelBase = root.dataset.cancel || "cancel.html?ref=";
 const moneyFmt = new Intl.NumberFormat("en-GB", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
 const dateFmt = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric" });
 const STORE = "portico-reservations";
@@ -72,6 +73,12 @@ function sampleHref() {
   return `${selfPage}PT-656069`;
 }
 
+function cancelHref(reference) {
+  const base = cancelBase.replace(/\/$/, "");
+  if (base.includes("?")) return `${base}${encodeURIComponent(reference)}`;
+  return `${base}/${encodeURIComponent(reference)}/cancel`;
+}
+
 // A reservation made in this browser is kept until the tab closes.
 function readSaved(reference) {
   try {
@@ -123,11 +130,12 @@ function renderTrip(trip) {
         <div><dt>Room</dt><dd>${escapeHtml(trip.roomName)}</dd></div>
         <div><dt>Check-in</dt><dd>${escapeHtml(formatDay(trip.checkIn))}</dd></div>
         <div><dt>Check-out</dt><dd>${escapeHtml(formatDay(trip.checkOut))}</dd></div>
-        <div><dt>Cancellation</dt><dd class="${cancel.locked ? "is-locked" : ""}">${escapeHtml(cancel.text)}</dd></div>
-        <div><dt>Total</dt><dd>${escapeHtml(money(trip.total))}</dd></div>
+        <div><dt>Cancellation</dt><dd class="${trip.cancelled || cancel.locked ? "is-locked" : ""}">${escapeHtml(trip.cancelled ? "Cancelled" : cancel.text)}</dd></div>
+        <div><dt>Total</dt><dd>${escapeHtml(money(trip.cancelled && trip.refund ? 0 : trip.total))}</dd></div>
       </dl>
       <p class="formula">${escapeHtml(money(trip.nightly))} × ${nights} night${nights === 1 ? "" : "s"} × ${trip.rooms} room${trip.rooms === 1 ? "" : "s"}</p>
       <a class="change-search trip-open" href="${escapeHtml(propertyHref(trip))}">View the property</a>
+      <a class="change-search trip-open" href="${escapeHtml(cancelHref(trip.reference))}">${trip.cancelled ? "Cancellation details" : "Cancel this reservation"}</a>
       <a class="change-search trip-open" href="${escapeHtml(tripsPage)}">Your trips</a>
     </div>
   </article>`;
