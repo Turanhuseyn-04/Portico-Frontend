@@ -139,6 +139,32 @@ function digits(value) {
   return String(value).replace(/\D/g, "");
 }
 
+function formatCard(value) {
+  return digits(value).slice(0, 19).replace(/(\d{4})(?=\d)/g, "$1 ");
+}
+
+function formatExpiry(value) {
+  const clean = digits(value).slice(0, 4);
+  if (clean.length <= 2) return clean;
+  return `${clean.slice(0, 2)}/${clean.slice(2)}`;
+}
+
+function bindFormat(input, format) {
+  input.addEventListener("input", () => {
+    const before = digits(input.value.slice(0, input.selectionStart)).length;
+    const next = format(input.value);
+    if (next === input.value) return;
+    input.value = next;
+    let pos = 0;
+    let seen = 0;
+    while (pos < input.value.length && seen < before) {
+      if (/\d/.test(input.value[pos])) seen += 1;
+      pos += 1;
+    }
+    input.setSelectionRange(pos, pos);
+  });
+}
+
 function luhn(number) {
   let sum = 0;
   let alt = false;
@@ -206,12 +232,12 @@ function formHtml(total) {
       <span class="field-error" data-error="cardName"></span>
     </label>
     <label class="stack">Card number
-      <input name="number" type="text" inputmode="numeric" required autocomplete="cc-number" placeholder="•••• •••• •••• ••••">
+      <input name="number" type="text" inputmode="numeric" required autocomplete="cc-number" maxlength="23" placeholder="•••• •••• •••• ••••">
       <span class="field-error" data-error="number"></span>
     </label>
     <div class="card-row">
       <label class="stack">Expiry
-        <input name="expiry" type="text" inputmode="numeric" required autocomplete="cc-exp" placeholder="MM/YY">
+        <input name="expiry" type="text" inputmode="numeric" required autocomplete="cc-exp" maxlength="5" placeholder="MM/YY">
         <span class="field-error" data-error="expiry"></span>
       </label>
       <label class="stack">Security code
@@ -260,6 +286,8 @@ async function start() {
   </div>`;
 
   const form = document.getElementById("paymentForm");
+  bindFormat(form.elements.number, formatCard);
+  bindFormat(form.elements.expiry, formatExpiry);
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const error = document.getElementById("paymentError");
