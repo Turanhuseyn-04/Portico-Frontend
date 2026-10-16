@@ -1880,3 +1880,50 @@ a.property-card { text-decoration: none; }
 
 #accountDone { margin-top: 8px; }
 
+.trip-list {
+  display: grid;
+  gap: 16px;
+}
+
+a.trip-row {
+  display: grid;
+  grid-template-columns: 168px 1fr auto;
+  gap: 20px;
+  align-items: center;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 12px;
+  color: inherit;
+  text-decoration: none;
+}
+
+a.trip-row img {
+  width: 168px;
+  height: 124px;
+  object-fit: cover;
+  border-radius: 14px;
+  background: #d9cbb8;
+}
+
+a.trip-row h2 {
+  margin: 4px 0 0;
+  font-size: clamp(28px, 3vw, 40px);
+  line-height: 1;
+}
+
+.trip-total {
+  margin: 0;
+  padding-right: 12px;
+  font-family: var(--serif);
+  font-size: 32px;
+}
+
+@media (max-width: 700px) {
+  a.trip-row { grid-template-columns: 1fr; }
+
+  a.trip-row img { width: 100%; height: 180px; }
+
+  .trip-total { padding-right: 0; }
+}
+

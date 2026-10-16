@@ -1101,6 +1101,10 @@ function reservationPage(reference) {
   return `reservation.html?ref=${encodeURIComponent(reference)}`;
 }
 
+function tripsPage() {
+  return "trips.html";
+}
+
 function rememberReservation(reference, room, status) {
   const address = state.property.address || {};
   const photo = (state.property.gallery && state.property.gallery[0] && state.property.gallery[0].src) || room.image;
@@ -1165,6 +1169,7 @@ async function submitReserve(event) {
       ${bookingSummary(room, status)}
       <p class="preview-note">A confirmation would go to ${escapeHtml(fields.email.value.trim())}. Nothing was charged. Payments arrive with the API.</p>
       <a class="change-search trip-open" href="${escapeHtml(reservationPage(result.reference))}">Open this reservation</a>
+      <a class="change-search trip-open" href="${escapeHtml(tripsPage())}">Your trips</a>
       <button class="search-btn auth-submit" type="button" data-close="reserve">Done</button>`;
     $("reserveStep").hidden = true;
     done.hidden = false;

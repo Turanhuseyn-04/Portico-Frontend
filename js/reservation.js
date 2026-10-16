@@ -4,6 +4,7 @@ const root = document.getElementById("reservation");
 const assetRoot = root.dataset.assetRoot || "assets/";
 const propertyPage = root.dataset.property || "property.html";
 const selfPage = root.dataset.self || "reservation.html?ref=";
+const tripsPage = root.dataset.trips || "trips.html";
 const moneyFmt = new Intl.NumberFormat("en-GB", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
 const dateFmt = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric" });
 const STORE = "portico-reservations";
@@ -127,6 +128,7 @@ function renderTrip(trip) {
       </dl>
       <p class="formula">${escapeHtml(money(trip.nightly))} × ${nights} night${nights === 1 ? "" : "s"} × ${trip.rooms} room${trip.rooms === 1 ? "" : "s"}</p>
       <a class="change-search trip-open" href="${escapeHtml(propertyHref(trip))}">View the property</a>
+      <a class="change-search trip-open" href="${escapeHtml(tripsPage)}">Your trips</a>
     </div>
   </article>`;
 }
