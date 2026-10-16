@@ -37,17 +37,16 @@ document.addEventListener("click", (event) => {
   if (event.target.closest(".nav a")) closeMenu();
 });
 
-const passwordToggle = document.querySelector(".password-toggle");
-if (passwordToggle) {
-  const password = form.elements.password;
-  passwordToggle.addEventListener("click", () => {
-    const shown = password.type === "password";
-    password.type = shown ? "text" : "password";
-    passwordToggle.classList.toggle("is-shown", shown);
-    passwordToggle.setAttribute("aria-pressed", String(shown));
-    passwordToggle.setAttribute("aria-label", shown ? "Hide password" : "Show password");
+document.querySelectorAll(".password-toggle").forEach((toggle) => {
+  const input = toggle.closest(".password-field").querySelector("input");
+  toggle.addEventListener("click", () => {
+    const shown = input.type === "password";
+    input.type = shown ? "text" : "password";
+    toggle.classList.toggle("is-shown", shown);
+    toggle.setAttribute("aria-pressed", String(shown));
+    toggle.setAttribute("aria-label", shown ? "Hide password" : "Show password");
   });
-}
+});
 
 if (mode === "signin") {
   const params = new URLSearchParams(window.location.search);
@@ -74,8 +73,20 @@ if (mode === "signin") {
     window.location.href = next.href;
   });
 } else {
+  const confirmError = document.getElementById("confirmError");
+  const confirm = form.elements.confirm;
+  confirm.addEventListener("input", () => {
+    confirm.removeAttribute("aria-invalid");
+    if (confirmError) confirmError.hidden = true;
+  });
   form.addEventListener("submit", (event) => {
     event.preventDefault();
+    if (form.elements.password.value !== confirm.value) {
+      confirm.setAttribute("aria-invalid", "true");
+      if (confirmError) confirmError.hidden = false;
+      confirm.focus();
+      return;
+    }
     const account = {
       name: form.elements.name.value.trim(),
       email: form.elements.email.value.trim()
