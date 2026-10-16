@@ -43,7 +43,7 @@
   </header>
 
   <main>
-    <section class="section results" id="account" data-mode="signin" data-failed-url="signin.html?failed=1">
+    <section class="section results" id="account" data-mode="signin" data-failed-url="signin.html?failed=1" data-account-url="account.html">
       <div class="wrap">
         <p class="kicker">Account</p>
         <h1 id="accountTitle">Sign in</h1>
@@ -96,7 +96,7 @@
       </div>
       <div>
         <h2>This page</h2>
-        <p>Sign in is its own address. A password that does not match opens the failed-login address. Nothing is stored until Portico.Api is connected.</p>
+        <p>A registered email opens the account page. Any other email opens the failed-login address. The password is not stored.</p>
       </div>
     </div>
     <div class="wrap legal">
@@ -105,6 +105,6 @@
     </div>
   </footer>
 
-  <script src="js/account.js?v=1" defer></script>
+  <script src="js/account.js?v=2" defer></script>
 </body>
 </html>

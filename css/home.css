@@ -1876,6 +1876,13 @@ a.property-card { text-decoration: none; }
   text-align: center;
 }
 
+.account-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
 .account-panel {
   width: 100%;
   max-width: 460px;
