@@ -134,9 +134,11 @@ function renderTrip(trip) {
         <div><dt>Total</dt><dd>${escapeHtml(money(trip.cancelled && trip.refund ? 0 : trip.total))}</dd></div>
       </dl>
       <p class="formula">${escapeHtml(money(trip.nightly))} × ${nights} night${nights === 1 ? "" : "s"} × ${trip.rooms} room${trip.rooms === 1 ? "" : "s"}</p>
-      <a class="change-search trip-open" href="${escapeHtml(propertyHref(trip))}">View the property</a>
-      <a class="change-search trip-open" href="${escapeHtml(cancelHref(trip.reference))}">${trip.cancelled ? "Cancellation details" : "Cancel this reservation"}</a>
-      <a class="change-search trip-open" href="${escapeHtml(tripsPage)}">Your trips</a>
+      <div class="trip-actions">
+        <a class="change-search" href="${escapeHtml(propertyHref(trip))}">View the property</a>
+        <a class="change-search" href="${escapeHtml(tripsPage)}">Your trips</a>
+        <a class="change-search trip-cancel" href="${escapeHtml(cancelHref(trip.reference))}">${trip.cancelled ? "Cancellation details" : "Cancel this reservation"}</a>
+      </div>
     </div>
   </article>`;
 }

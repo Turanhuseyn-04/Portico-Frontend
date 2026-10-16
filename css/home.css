@@ -1842,6 +1842,27 @@ a.property-card { text-decoration: none; }
 
 .trip-open { margin-top: 18px; }
 
+.trip-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.trip-cancel {
+  margin-left: auto;
+  background: #b42318;
+  border-color: #b42318;
+  color: #fff;
+}
+
+.trip-cancel:hover {
+  background: #8e1c14;
+  border-color: #8e1c14;
+  color: #fff;
+}
+
 @media (max-width: 800px) {
   .trip { grid-template-columns: 1fr; }
 
