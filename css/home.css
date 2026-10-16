@@ -1614,6 +1614,32 @@ a.property-card { text-decoration: none; }
   font-weight: 400;
 }
 
+.password-field { position: relative; display: block; }
+
+.password-field input { width: 100%; padding-right: 44px; }
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  width: 36px;
+  height: 36px;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.password-toggle .eye-off { display: none; }
+
+.password-toggle.is-shown .eye { display: none; }
+
+.password-toggle.is-shown .eye-off { display: block; }
+
 .auth-submit { width: 100%; margin-top: 6px; }
 
 .text-btn {

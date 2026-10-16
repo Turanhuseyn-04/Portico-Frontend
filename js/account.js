@@ -37,6 +37,18 @@ document.addEventListener("click", (event) => {
   if (event.target.closest(".nav a")) closeMenu();
 });
 
+const passwordToggle = document.querySelector(".password-toggle");
+if (passwordToggle) {
+  const password = form.elements.password;
+  passwordToggle.addEventListener("click", () => {
+    const shown = password.type === "password";
+    password.type = shown ? "text" : "password";
+    passwordToggle.classList.toggle("is-shown", shown);
+    passwordToggle.setAttribute("aria-pressed", String(shown));
+    passwordToggle.setAttribute("aria-label", shown ? "Hide password" : "Show password");
+  });
+}
+
 if (mode === "signin") {
   const params = new URLSearchParams(window.location.search);
   const failed = root.dataset.failed === "true" || params.get("failed") === "1";
