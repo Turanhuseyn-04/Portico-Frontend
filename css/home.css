@@ -2009,7 +2009,8 @@ a.property-card { text-decoration: none; }
   gap: 16px;
 }
 
-a.trip-row {
+a.trip-row,
+article.trip-row {
   display: grid;
   grid-template-columns: 168px 1fr auto;
   gap: 20px;
@@ -2022,7 +2023,8 @@ a.trip-row {
   text-decoration: none;
 }
 
-a.trip-row img {
+a.trip-row img,
+article.trip-row img {
   width: 168px;
   height: 124px;
   object-fit: cover;
@@ -2030,10 +2032,104 @@ a.trip-row img {
   background: #d9cbb8;
 }
 
-a.trip-row h2 {
+a.trip-row h2,
+article.trip-row h2 {
   margin: 4px 0 0;
   font-size: clamp(28px, 3vw, 40px);
   line-height: 1;
+}
+
+a.trip-row h2 a,
+article.trip-row h2 a,
+.stay-type a { color: inherit; }
+
+.admin-counts {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 8px 0 28px;
+}
+
+.admin-count {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px 18px;
+}
+
+.admin-count span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.admin-count strong {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--serif);
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.admin-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 12px 0 16px;
+}
+
+.admin-tools input,
+.admin-tools select {
+  height: 42px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  padding: 0 12px;
+  background: white;
+  font: inherit;
+}
+
+.admin-block { margin-top: 36px; }
+
+.admin-rooms {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.admin-rooms li {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 14px 16px;
+}
+
+.admin-rooms strong,
+.admin-rooms span { display: block; }
+
+.admin-rooms span { color: var(--muted); margin-top: 4px; }
+
+.admin-saved { margin: 12px 0 0; padding-left: 18px; }
+
+#adminReservation .wrap,
+#adminStay .wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+#adminReservationBody,
+#adminStayBody {
+  width: 100%;
+  max-width: 720px;
+  text-align: left;
+}
+
+@media (max-width: 800px) {
+  .admin-counts { grid-template-columns: 1fr 1fr; }
 }
 
 .trip-total {
@@ -2044,9 +2140,11 @@ a.trip-row h2 {
 }
 
 @media (max-width: 700px) {
-  a.trip-row { grid-template-columns: 1fr; }
+  a.trip-row,
+article.trip-row { grid-template-columns: 1fr; }
 
-  a.trip-row img { width: 100%; height: 180px; }
+  a.trip-row img,
+article.trip-row img { width: 100%; height: 180px; }
 
   .trip-total { padding-right: 0; }
 }

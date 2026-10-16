@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin — Portico</title>
+  <meta name="description" content="Reservations in this browser, the eight stays, and the account kept here.">
+  <meta name="theme-color" content="#142033">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='9' fill='%23142033'/%3E%3Cpath fill='none' stroke='%23f4efe6' stroke-width='1.6' stroke-linecap='round' d='M3 34c7.2.2 11.2-6.2 14.2-11.4'/%3E%3Ccircle cx='3.2' cy='34' r='1.55' fill='%23f4efe6'/%3E%3Cg transform='translate(13 1.5) scale(1.12)' fill='%23f4efe6'%3E%3Cpath d='M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z'/%3E%3C/g%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/home.css?v=40">
+  <script>document.documentElement.classList.add("js");</script>
+</head>
+<body class="results-page">
+  <a class="skip" href="#admin">Skip to admin</a>
+
+  <header class="header is-solid" id="header">
+    <div class="header-inner">
+      <a class="logo" href="index.html" aria-label="Portico, home">
+        <svg class="logo-mark" viewBox="0 0 40 40" width="36" height="36" aria-hidden="true">
+          <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M3 34c7.2.2 11.2-6.2 14.2-11.4"/>
+          <circle cx="3.2" cy="34" r="1.55" fill="currentColor"/>
+          <g transform="translate(13 1.5) scale(1.12)" fill="currentColor">
+            <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>
+          </g>
+        </svg>
+        Portico
+      </a>
+      <nav class="nav" id="nav">
+        <a href="index.html">Home</a>
+        <a href="types.html">Properties</a>
+        <a href="destinations.html">Destinations</a>
+        <a href="trips.html">Your trips</a>
+        <a class="btn-line" href="register.html">Register</a>
+        <a class="btn-line btn-fill" href="signin.html">Sign in</a>
+      </nav>
+      <button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="section results" id="admin" data-asset-root="assets/" data-guest="reservation.html?ref=" data-detail="admin-reservation.html?ref=" data-stay="admin-stay.html?id=">
+      <div class="wrap">
+        <p class="kicker">Houses</p>
+        <h1>Admin</h1>
+        <p class="sub">Reservations in this browser, the catalog, and the account kept here. Nothing here is editable until Portico.Api exists.</p>
+        <div class="admin-counts" id="adminCounts"></div>
+        <div class="admin-tools">
+          <input id="adminQuery" type="search" placeholder="Reference, email, or property" aria-label="Filter by reference, email, or property">
+          <select id="adminCity" aria-label="City"></select>
+          <select id="adminStatus" aria-label="Status">
+            <option value="">All statuses</option>
+            <option>Upcoming</option>
+            <option>In house</option>
+            <option>Past</option>
+            <option>Cancelled</option>
+          </select>
+          <select id="adminType" aria-label="Property type">
+            <option value="">All types</option>
+            <option>Hotel</option>
+            <option>Apartment</option>
+            <option>Resort</option>
+            <option>Villa</option>
+          </select>
+        </div>
+        <div class="admin-block">
+          <h2>Next arrivals</h2>
+          <div id="adminNext"></div>
+        </div>
+        <div class="admin-block">
+          <h2>Reservations</h2>
+          <div id="adminReservations"></div>
+        </div>
+        <div class="admin-block">
+          <h2>Stays</h2>
+          <div id="adminStays"></div>
+        </div>
+        <div class="admin-block">
+          <h2>Account</h2>
+          <div id="adminAccount"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-grid">
+      <div>
+        <a class="logo" href="index.html">
+          <svg class="logo-mark" viewBox="0 0 40 40" width="32" height="32" aria-hidden="true">
+            <path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M3 34c7.2.2 11.2-6.2 14.2-11.4"/>
+            <circle cx="3.2" cy="34" r="1.55" fill="currentColor"/>
+            <g transform="translate(13 1.5) scale(1.12)" fill="currentColor">
+              <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>
+            </g>
+          </svg>
+          Portico
+        </a>
+        <p>A concentrated stay list. Search, price, and book one house at a time.</p>
+        <a class="footer-reach" href="mailto:hello@portico.example">hello@portico.example</a>
+        <a class="footer-reach" href="tel:+442079460958">+44 20 7946 0958</a>
+      </div>
+      <div>
+        <h2>Visit</h2>
+        <a href="index.html#hero">Search</a>
+        <a href="index.html#list">Properties</a>
+        <a href="index.html#notes">Stories</a>
+      </div>
+      <div>
+        <h2>Account</h2>
+        <a href="trips.html">Your trips</a>
+        <a href="admin.html" aria-current="page">Admin</a>
+        <a href="signin.html">Sign in</a>
+        <a href="register.html">Register</a>
+      </div>
+      <div>
+        <h2>This page</h2>
+        <p>Reservations, the eight stays, and the account in this browser. Prices and rooms stay read-only until Portico.Api can save an edit.</p>
+      </div>
+    </div>
+    <div class="wrap legal">
+      <p>© 2026 Portico. Photographs from Unsplash, used for this design study.</p>
+      <p class="legal-links"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="help.html">Help</a></p>
+    </div>
+  </footer>
+
+  <script src="js/mock-properties.js" defer></script>
+  <script src="js/admin.js?v=1" defer></script>
+</body>
+</html>
