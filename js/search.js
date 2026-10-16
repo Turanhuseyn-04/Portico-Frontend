@@ -5,16 +5,8 @@ const assetRoot = root.dataset.assetRoot || "assets/";
 const homePage = root.dataset.home || "index.html";
 const propertyPage = root.dataset.property || "property.html";
 
-const stays = [
-  { id: "marble", name: "The Marble Court", city: "Lisbon", country: "Portugal", area: "Chiado", type: "Suite", property: "Hotel", score: 9.4, reviews: 186, price: 242, maxGuests: 3, cancel: true, scarce: true, amenities: ["Courtyard", "Breakfast", "River walk"], image: "lisbon.jpg", order: 0 },
-  { id: "screens", name: "House of Paper Screens", city: "Kyoto", country: "Japan", area: "Gion", type: "Room", property: "Hotel", score: 9.1, reviews: 143, price: 198, maxGuests: 2, cancel: true, scarce: false, amenities: ["Cedar bath", "Garden", "Work desk"], image: "kyoto.jpg", order: 1 },
-  { id: "atelier", name: "The North Atelier", city: "Copenhagen", country: "Denmark", area: "Nørrebro", type: "Studio", property: "Apartment", score: 8.8, reviews: 97, price: 176, maxGuests: 2, cancel: true, scarce: false, amenities: ["Work desk", "Courtyard", "Bike"], image: "copenhagen.jpg", order: 2 },
-  { id: "riad", name: "Riad of Small Doors", city: "Marrakech", country: "Morocco", area: "Medina", type: "House", property: "Villa", score: 9.6, reviews: 221, price: 164, maxGuests: 5, cancel: true, scarce: false, amenities: ["Whole house", "Roof terrace", "Breakfast"], image: "marrakech.jpg", order: 3 },
-  { id: "orchard", name: "Cliff Orchard", city: "Amalfi", country: "Italy", area: "Above the port", type: "Suite", property: "Resort", score: 9.3, reviews: 118, price: 310, maxGuests: 3, cancel: true, scarce: true, amenities: ["Sea view", "Breakfast", "Terrace"], image: "amalfi.jpg", order: 4 },
-  { id: "patio", name: "Casa del Patio", city: "Oaxaca", country: "Mexico", area: "Centro", type: "Room", property: "Hotel", score: 8.9, reviews: 76, price: 132, maxGuests: 3, cancel: false, scarce: false, amenities: ["Patio", "Fan", "Walk to market"], image: "oaxaca.jpg", order: 5 },
-  { id: "greenhouse", name: "Greenhouse No. 4", city: "Porto", country: "Portugal", area: "Cedofeita", type: "Studio", property: "Apartment", score: 9.0, reviews: 64, price: 154, maxGuests: 2, cancel: true, scarce: false, amenities: ["Kitchenette", "Courtyard", "Work desk"], image: "porto.jpg", order: 6 },
-  { id: "gallery", name: "The Long Gallery", city: "Edinburgh", country: "Scotland", area: "Old Town", type: "House", property: "Villa", score: 9.2, reviews: 159, price: 208, maxGuests: 4, cancel: true, scarce: false, amenities: ["Whole house", "Fireplace", "Old Town"], image: "edinburgh.jpg", order: 7 }
-];
+let stays = [];
+let catalogReady = false;
 
 const moneyFmt = new Intl.NumberFormat("en-GB", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
 const heartSvg = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 20s-7-4.4-7-9a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 4.6-7 9-7 9z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>';
@@ -143,6 +135,12 @@ function propertyHref(stay) {
   return `${propertyPage}?${next}`;
 }
 
+function picture(image) {
+  if (!image) return "";
+  if (/^(https?:|\/|assets\/)/.test(image)) return image;
+  return `${assetRoot}${image}`;
+}
+
 function stayCard(stay) {
   const ok = fits(stay);
   const policy = cancelCopy(stay);
@@ -150,7 +148,7 @@ function stayCard(stay) {
   const savedNow = saved.has(stay.id);
   return `<article class="stay${ok ? "" : " is-unfit"}" data-stay="${stay.id}" data-href="${escapeHtml(href)}" tabindex="0">
     <div class="stay-media">
-      <img src="${assetRoot}${stay.image}" alt="${escapeHtml(stay.name)} in ${escapeHtml(stay.city)}" width="800" height="600" loading="lazy">
+      <img src="${picture(stay.image)}" alt="${escapeHtml(stay.name)} in ${escapeHtml(stay.city)}" width="800" height="600" loading="lazy">
       <button class="heart" type="button" data-stay="${stay.id}" data-name="${escapeHtml(stay.name)}" aria-pressed="${savedNow}" aria-label="${savedNow ? "Remove" : "Save"} ${escapeHtml(stay.name)}">${heartSvg}</button>
     </div>
     <div class="stay-body">
@@ -189,6 +187,7 @@ function filteredStays() {
 }
 
 function render() {
+  if (!catalogReady) return;
   const title = document.getElementById("resultsTitle");
   const meta = document.getElementById("resultsMeta");
   const facts = document.getElementById("resultsFacts");
@@ -272,7 +271,11 @@ document.getElementById("stayList").addEventListener("keydown", (event) => {
   window.location.href = card.dataset.href;
 });
 
-render();
+PorticoApi.listProperties().then((properties) => {
+  stays = properties.map((property) => property.card);
+  catalogReady = true;
+  render();
+});
 
 const header = document.getElementById("header");
 const nav = document.getElementById("nav");

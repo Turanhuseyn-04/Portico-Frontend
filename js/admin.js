@@ -2,31 +2,8 @@
 
 const moneyFmt = new Intl.NumberFormat("en-GB", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
 const dateFmt = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric" });
-const STORE = "portico-reservations";
-const ACCOUNT_KEY = "portico-account";
-const SAVED_KEY = "portico:saved";
-
-const samples = {
-  "PT-656069": {
-    reference: "PT-656069",
-    propertyId: "marble",
-    propertyName: "The Marble Court",
-    city: "Lisbon",
-    country: "Portugal",
-    area: "Chiado",
-    image: "lisbon.jpg",
-    roomId: "suite",
-    roomName: "Deluxe Courtyard Suite",
-    checkIn: "2026-11-12",
-    checkOut: "2026-11-15",
-    refundable: true,
-    nightly: 342,
-    total: 1026,
-    rooms: 1,
-    adults: 2,
-    children: 0
-  }
-};
+const porticoAdmin = { trips: [], properties: [], account: null, saved: new Set(), messages: [] };
+window.porticoAdmin = porticoAdmin;
 
 function escapeHtml(value) {
   return String(value ?? "").replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
@@ -100,37 +77,20 @@ function refundText(trip) {
   return trip.refund ? "The total was returned." : "The total stays due.";
 }
 
-function readSaved() {
-  try {
-    return JSON.parse(sessionStorage.getItem(STORE) || "{}");
-  } catch {
-    return {};
-  }
-}
-
 function allTrips() {
-  return Object.values({ ...samples, ...readSaved() }).sort((a, b) => String(a.checkIn).localeCompare(String(b.checkIn)));
+  return porticoAdmin.trips;
 }
 
 function readAccount() {
-  try {
-    return JSON.parse(localStorage.getItem(ACCOUNT_KEY) || "null");
-  } catch {
-    return null;
-  }
+  return porticoAdmin.account;
 }
 
 function readSavedStays() {
-  try {
-    const ids = JSON.parse(localStorage.getItem(SAVED_KEY) || "[]");
-    return new Set(Array.isArray(ids) ? ids : []);
-  } catch {
-    return new Set();
-  }
+  return porticoAdmin.saved;
 }
 
 function properties() {
-  return typeof MOCK_PROPERTIES === "undefined" ? [] : MOCK_PROPERTIES;
+  return porticoAdmin.properties;
 }
 
 function policyFor(type) {
@@ -347,7 +307,17 @@ function renderStay() {
     <p class="preview-note">Read only. Portico.Api will save edits later.</p>`;
 }
 
-bindMenu();
-if (document.getElementById("admin")) renderPanel();
-if (document.getElementById("adminReservation")) renderReservation();
-if (document.getElementById("adminStay")) renderStay();
+async function startAdmin() {
+  porticoAdmin.trips = await PorticoApi.listReservations();
+  porticoAdmin.properties = await PorticoApi.listProperties();
+  porticoAdmin.account = await PorticoApi.currentAccount();
+  porticoAdmin.saved = new Set(await PorticoApi.listSaved());
+  porticoAdmin.messages = await PorticoApi.listMessages();
+  bindMenu();
+  if (document.getElementById("admin")) renderPanel();
+  if (document.getElementById("adminReservation")) renderReservation();
+  if (document.getElementById("adminStay")) renderStay();
+  if (typeof window.porticoAdminBoot === "function") window.porticoAdminBoot();
+}
+
+startAdmin();

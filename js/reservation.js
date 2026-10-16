@@ -8,31 +8,6 @@ const tripsPage = root.dataset.trips || "trips.html";
 const cancelBase = root.dataset.cancel || "cancel.html?ref=";
 const moneyFmt = new Intl.NumberFormat("en-GB", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
 const dateFmt = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric" });
-const STORE = "portico-reservations";
-
-// Stand-in record. Portico.Api will return the reservation for this reference.
-const samples = {
-  "PT-656069": {
-    reference: "PT-656069",
-    propertyId: "marble",
-    propertyName: "The Marble Court",
-    city: "Lisbon",
-    country: "Portugal",
-    area: "Chiado",
-    image: "lisbon.jpg",
-    roomId: "suite",
-    roomName: "Deluxe Courtyard Suite",
-    checkIn: "2026-11-12",
-    checkOut: "2026-11-15",
-    refundable: true,
-    nightly: 342,
-    total: 1026,
-    rooms: 1,
-    adults: 2,
-    children: 0
-  }
-};
-
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
 }
@@ -77,21 +52,6 @@ function cancelHref(reference) {
   const base = cancelBase.replace(/\/$/, "");
   if (base.includes("?")) return `${base}${encodeURIComponent(reference)}`;
   return `${base}/${encodeURIComponent(reference)}/cancel`;
-}
-
-// A reservation made in this browser is kept until the tab closes.
-function readSaved(reference) {
-  try {
-    const all = JSON.parse(sessionStorage.getItem(STORE) || "{}");
-    return all[reference] || null;
-  } catch {
-    return null;
-  }
-}
-
-function findReservation(reference) {
-  if (!reference) return null;
-  return readSaved(reference) || samples[reference] || null;
 }
 
 function cancellation(trip) {
@@ -143,10 +103,14 @@ function renderTrip(trip) {
   </article>`;
 }
 
-const reference = (root.dataset.reference || new URLSearchParams(window.location.search).get("ref") || "").trim();
-const trip = findReservation(reference);
-if (trip) renderTrip(trip);
-else renderMissing(reference);
+async function start() {
+  const reference = (root.dataset.reference || new URLSearchParams(window.location.search).get("ref") || "").trim();
+  const trip = await PorticoApi.getReservation(reference);
+  if (trip) renderTrip(trip);
+  else renderMissing(reference);
+}
+
+start();
 
 const header = document.getElementById("header");
 const nav = document.getElementById("nav");

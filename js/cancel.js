@@ -7,31 +7,6 @@ const cancelBase = root.dataset.cancel || "cancel.html?ref=";
 const tripsPage = root.dataset.trips || "trips.html";
 const moneyFmt = new Intl.NumberFormat("en-GB", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
 const dateFmt = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric" });
-const STORE = "portico-reservations";
-
-// Stand-in record. Portico.Api will return the reservation for this reference.
-const samples = {
-  "PT-656069": {
-    reference: "PT-656069",
-    propertyId: "marble",
-    propertyName: "The Marble Court",
-    city: "Lisbon",
-    country: "Portugal",
-    area: "Chiado",
-    image: "lisbon.jpg",
-    roomId: "suite",
-    roomName: "Deluxe Courtyard Suite",
-    checkIn: "2026-11-12",
-    checkOut: "2026-11-15",
-    refundable: true,
-    nightly: 342,
-    total: 1026,
-    rooms: 1,
-    adults: 2,
-    children: 0
-  }
-};
-
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
 }
@@ -63,20 +38,6 @@ function cancelHref(reference) {
   const base = cancelBase.replace(/\/$/, "");
   if (base.includes("?")) return `${base}${encodeURIComponent(reference)}`;
   return `${base}/${encodeURIComponent(reference)}/cancel`;
-}
-
-function readSaved(reference) {
-  try {
-    const all = JSON.parse(sessionStorage.getItem(STORE) || "{}");
-    return all[reference] || null;
-  } catch {
-    return null;
-  }
-}
-
-function findReservation(reference) {
-  if (!reference) return null;
-  return readSaved(reference) || samples[reference] || null;
 }
 
 function deadline(trip) {
@@ -159,19 +120,15 @@ function render(trip) {
   document.getElementById("cancelBody").innerHTML = `<div class="account-panel">${stayHtml(trip)}${action}</div>`;
   const form = document.getElementById("cancelForm");
   if (!form) return;
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const refund = refundDue(trip) ? trip.total : 0;
-    const all = JSON.parse(sessionStorage.getItem(STORE) || "{}");
-    all[trip.reference] = { ...trip, cancelled: true, refund };
-    sessionStorage.setItem(STORE, JSON.stringify(all));
-    render(all[trip.reference]);
+    render(await PorticoApi.cancelReservation(trip.reference));
   });
 }
 
-function start() {
+async function start() {
   const reference = (root.dataset.reference || new URLSearchParams(window.location.search).get("ref") || "").trim();
-  const trip = findReservation(reference);
+  const trip = await PorticoApi.getReservation(reference);
   if (trip) render(trip);
   else showMissing(reference);
 }

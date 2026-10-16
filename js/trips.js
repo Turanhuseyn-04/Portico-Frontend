@@ -5,25 +5,6 @@ const assetRoot = root.dataset.assetRoot || "assets/";
 const reservationPage = root.dataset.reservation || "reservation.html?ref=";
 const moneyFmt = new Intl.NumberFormat("en-GB", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
 const dateFmt = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric" });
-const STORE = "portico-reservations";
-
-// Stand-in list. Portico.Api will return the signed-in guest's reservations.
-const samples = {
-  "PT-656069": {
-    reference: "PT-656069",
-    propertyId: "marble",
-    propertyName: "The Marble Court",
-    city: "Lisbon",
-    country: "Portugal",
-    area: "Chiado",
-    image: "lisbon.jpg",
-    roomName: "Deluxe Courtyard Suite",
-    checkIn: "2026-11-12",
-    checkOut: "2026-11-15",
-    total: 1026
-  }
-};
-
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
 }
@@ -51,19 +32,6 @@ function tripHref(reference) {
   return `${reservationPage}${encodeURIComponent(reference)}`;
 }
 
-function readSaved() {
-  try {
-    return JSON.parse(sessionStorage.getItem(STORE) || "{}");
-  } catch {
-    return {};
-  }
-}
-
-function allTrips() {
-  const merged = { ...samples, ...readSaved() };
-  return Object.values(merged).sort((a, b) => String(a.checkIn).localeCompare(String(b.checkIn)));
-}
-
 function row(trip) {
   const where = [trip.area, trip.city, trip.country].filter(Boolean).join(" · ");
   return `<a class="trip-row" href="${escapeHtml(tripHref(trip.reference))}">
@@ -79,8 +47,8 @@ function row(trip) {
   </a>`;
 }
 
-function render() {
-  const trips = allTrips();
+async function render() {
+  const trips = await PorticoApi.listReservations();
   const meta = document.getElementById("tripsMeta");
   const list = document.getElementById("tripList");
   meta.textContent = trips.length === 1 ? "1 stay" : `${trips.length} stays`;

@@ -5,7 +5,7 @@ const DOW = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 const LIMITS = { adults: [1, 8], children: [0, 6], rooms: [1, 4] };
 const MAX_NIGHTS = 30;
 const REVIEW_PAGE = 4;
-const SAVED_KEY = "portico:saved";
+let savedIds = new Set();
 const moneyFmt = new Intl.NumberFormat("en-GB", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
 
 const TYPE_COPY = {
@@ -267,11 +267,7 @@ function syncUrl() {
 }
 
 function loadSaved() {
-  try {
-    return new Set(JSON.parse(window.localStorage.getItem(SAVED_KEY) || "[]"));
-  } catch {
-    return new Set();
-  }
+  return savedIds;
 }
 
 function toast(message) {
@@ -301,6 +297,11 @@ async function loadProperty() {
   propertyEl.setAttribute("aria-busy", "true");
   try {
     state.property = await PorticoApi.getProperty(state.id);
+    try {
+      savedIds = new Set(await PorticoApi.listSaved());
+    } catch {
+      savedIds = new Set();
+    }
   } catch (error) {
     showPageError(error);
     return;
@@ -1114,37 +1115,6 @@ function tripsPage() {
   return "trips.html";
 }
 
-function rememberReservation(reference, room, status) {
-  const address = state.property.address || {};
-  const photo = (state.property.gallery && state.property.gallery[0] && state.property.gallery[0].src) || room.image;
-  const trip = {
-    reference,
-    propertyId: state.property.id,
-    propertyName: state.property.name,
-    city: address.city || "",
-    country: address.country || "",
-    area: address.area || "",
-    image: photo,
-    roomId: room.id,
-    roomName: room.name,
-    checkIn: toKey(state.checkIn),
-    checkOut: toKey(state.checkOut),
-    refundable: Boolean(room.refundable),
-    nightly: room.price,
-    total: status.total,
-    rooms: state.rooms,
-    adults: state.adults,
-    children: state.children
-  };
-  try {
-    const all = JSON.parse(sessionStorage.getItem("portico-reservations") || "{}");
-    all[reference] = trip;
-    sessionStorage.setItem("portico-reservations", JSON.stringify(all));
-  } catch {
-    /* The confirmation link still opens. A saved trip needs this browser. */
-  }
-}
-
 async function submitReserve(event) {
   event.preventDefault();
   $("reserveError").textContent = "";
@@ -1170,7 +1140,6 @@ async function submitReserve(event) {
       requests: fields.requests.value.trim()
     });
     const status = roomStatus(room);
-    rememberReservation(result.reference, room, status);
     const done = $("reserveDone");
     done.innerHTML = `<p class="kicker">Reservation preview</p>
       <h2>You are on the list</h2>
@@ -1400,20 +1369,17 @@ guestPopover.addEventListener("click", (event) => {
 $("reserveBtn").addEventListener("click", tryReserve);
 $("mobileReserve").addEventListener("click", tryReserve);
 
-$("saveBtn").addEventListener("click", () => {
-  const saved = loadSaved();
-  if (saved.has(state.id)) saved.delete(state.id);
-  else saved.add(state.id);
-  try {
-    window.localStorage.setItem(SAVED_KEY, JSON.stringify([...saved]));
-  } catch {
-    /* storage can be blocked; the button still reflects this visit */
+$("saveBtn").addEventListener("click", async () => {
+  if (savedIds.has(state.id)) {
+    savedIds = new Set(await PorticoApi.unsaveStay(state.id));
+  } else {
+    savedIds = new Set(await PorticoApi.saveStay(state.id));
   }
   paintSaved();
   const button = $("saveBtn");
   button.classList.remove("is-pop");
   window.requestAnimationFrame(() => button.classList.add("is-pop"));
-  toast(saved.has(state.id) ? `${state.property.name} saved.` : `${state.property.name} removed from saved stays.`);
+  toast(savedIds.has(state.id) ? `${state.property.name} saved.` : `${state.property.name} removed from saved stays.`);
 });
 
 $("shareBtn").addEventListener("click", async () => {

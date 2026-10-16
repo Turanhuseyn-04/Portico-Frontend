@@ -1,7 +1,6 @@
 "use strict";
 
 const root = document.getElementById("account");
-const ACCOUNT_KEY = "portico-account";
 const tripsPage = root.dataset.trips || "trips.html";
 const savedPage = root.dataset.saved || "saved.html";
 const signInPage = root.dataset.signin || "signin.html";
@@ -11,16 +10,8 @@ function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
 }
 
-function readAccount() {
-  try {
-    return JSON.parse(localStorage.getItem(ACCOUNT_KEY) || "null");
-  } catch {
-    return null;
-  }
-}
-
-function render() {
-  const account = readAccount();
+async function render() {
+  const account = await PorticoApi.currentAccount();
   const title = document.getElementById("accountTitle");
   const meta = document.getElementById("accountMeta");
   const body = document.getElementById("accountBody");

@@ -10,7 +10,6 @@ const moneyFmt = new Intl.NumberFormat("en-GB", { style: "currency", currency: "
 const dateFmt = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric" });
 const params = new URLSearchParams(window.location.search);
 const CHECKOUT = "portico-checkout";
-const STORE = "portico-reservations";
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
@@ -104,35 +103,6 @@ function showMessage(title, text, linkHref, linkText) {
     <p>${escapeHtml(text)}</p>
     <a class="change-search" href="${escapeHtml(linkHref)}">${escapeHtml(linkText)}</a>
   </div>`;
-}
-
-function remember(reference, property, room, stay, guest, total) {
-  const address = property.address || {};
-  const photo = (property.gallery && property.gallery[0] && property.gallery[0].src) || room.image;
-  const trip = {
-    reference,
-    propertyId: property.id,
-    propertyName: property.name,
-    city: address.city || "",
-    country: address.country || "",
-    area: address.area || "",
-    image: photo,
-    roomId: room.id,
-    roomName: room.name,
-    checkIn: stay.checkIn,
-    checkOut: stay.checkOut,
-    refundable: Boolean(room.refundable),
-    nightly: room.price,
-    total,
-    rooms: stay.rooms,
-    adults: stay.adults,
-    children: stay.children,
-    name: guest.name,
-    email: guest.email
-  };
-  const all = JSON.parse(sessionStorage.getItem(STORE) || "{}");
-  all[reference] = trip;
-  sessionStorage.setItem(STORE, JSON.stringify(all));
 }
 
 function digits(value) {
@@ -337,7 +307,6 @@ async function start() {
         phone: guest.phone || "",
         requests: guest.requests || ""
       });
-      remember(result.reference, property, room, stay, guest, result.total || total);
       sessionStorage.removeItem(CHECKOUT);
       window.location.href = `${reservationBase}${encodeURIComponent(result.reference)}`;
     } catch (failure) {

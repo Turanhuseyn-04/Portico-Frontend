@@ -3,19 +3,9 @@
 const root = document.getElementById("saved");
 const assetRoot = root.dataset.assetRoot || "assets/";
 const propertyPage = root.dataset.property || "property.html";
-const SAVED_KEY = "portico:saved";
 const moneyFmt = new Intl.NumberFormat("en-GB", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
 
-const stays = [
-  { id: "marble", name: "The Marble Court", city: "Lisbon", country: "Portugal", area: "Chiado", image: "lisbon.jpg", price: 242 },
-  { id: "screens", name: "House of Paper Screens", city: "Kyoto", country: "Japan", area: "Gion", image: "kyoto.jpg", price: 198 },
-  { id: "atelier", name: "The North Atelier", city: "Copenhagen", country: "Denmark", area: "Nørrebro", image: "copenhagen.jpg", price: 176 },
-  { id: "riad", name: "Riad of Small Doors", city: "Marrakech", country: "Morocco", area: "Medina", image: "marrakech.jpg", price: 164 },
-  { id: "orchard", name: "Cliff Orchard", city: "Amalfi", country: "Italy", area: "Above the port", image: "amalfi.jpg", price: 310 },
-  { id: "patio", name: "Casa del Patio", city: "Oaxaca", country: "Mexico", area: "Centro", image: "oaxaca.jpg", price: 132 },
-  { id: "greenhouse", name: "Greenhouse No. 4", city: "Porto", country: "Portugal", area: "Cedofeita", image: "porto.jpg", price: 154 },
-  { id: "gallery", name: "The Long Gallery", city: "Edinburgh", country: "Scotland", area: "Old Town", image: "edinburgh.jpg", price: 208 }
-];
+let stays = [];
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
@@ -25,15 +15,6 @@ function imageSrc(image) {
   if (!image) return "";
   if (/^(https?:|\/|assets\/)/.test(image)) return image;
   return `${assetRoot}${image}`;
-}
-
-function readSaved() {
-  try {
-    const ids = JSON.parse(localStorage.getItem(SAVED_KEY) || "[]");
-    return new Set(Array.isArray(ids) ? ids : []);
-  } catch {
-    return new Set();
-  }
 }
 
 function row(stay) {
@@ -49,8 +30,10 @@ function row(stay) {
   </a>`;
 }
 
-function render() {
-  const ids = readSaved();
+async function render() {
+  const [properties, savedIds] = await Promise.all([PorticoApi.listProperties(), PorticoApi.listSaved()]);
+  stays = properties.map((property) => property.card);
+  const ids = new Set(savedIds);
   const list = stays.filter((stay) => ids.has(stay.id));
   const meta = document.getElementById("savedMeta");
   const body = document.getElementById("savedList");

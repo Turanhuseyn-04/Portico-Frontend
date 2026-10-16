@@ -3,15 +3,6 @@
 const root = document.getElementById("account");
 const form = document.getElementById("accountForm");
 const mode = root.dataset.mode || "signin";
-const ACCOUNT_KEY = "portico-account";
-
-function readAccount() {
-  try {
-    return JSON.parse(localStorage.getItem(ACCOUNT_KEY) || "null");
-  } catch {
-    return null;
-  }
-}
 const header = document.getElementById("header");
 const nav = document.getElementById("nav");
 const navToggle = document.getElementById("navToggle");
@@ -59,18 +50,18 @@ if (mode === "signin") {
     document.title = "Sign in failed — Portico";
     (email ? form.elements.password : form.elements.email).focus();
   }
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    // Temporary. Portico.Api will check the password. A registered email opens the account page. The password is not stored.
+    // A known email opens the account. The password is not sent or stored.
     const email = form.elements.email.value.trim();
-    const account = readAccount();
-    if (account && account.email.toLowerCase() === email.toLowerCase()) {
+    try {
+      await PorticoApi.signIn({ email });
       window.location.href = root.dataset.accountUrl;
-      return;
+    } catch {
+      const next = new URL(root.dataset.failedUrl, window.location.href);
+      next.searchParams.set("email", email);
+      window.location.href = next.href;
     }
-    const next = new URL(root.dataset.failedUrl, window.location.href);
-    next.searchParams.set("email", email);
-    window.location.href = next.href;
   });
 } else {
   const confirmError = document.getElementById("confirmError");
@@ -79,7 +70,7 @@ if (mode === "signin") {
     confirm.removeAttribute("aria-invalid");
     if (confirmError) confirmError.hidden = true;
   });
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
     if (form.elements.password.value !== confirm.value) {
       confirm.setAttribute("aria-invalid", "true");
@@ -87,11 +78,10 @@ if (mode === "signin") {
       confirm.focus();
       return;
     }
-    const account = {
+    await PorticoApi.register({
       name: form.elements.name.value.trim(),
       email: form.elements.email.value.trim()
-    };
-    localStorage.setItem(ACCOUNT_KEY, JSON.stringify(account));
+    });
     window.location.href = root.dataset.accountUrl;
   });
 }
